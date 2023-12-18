@@ -1,0 +1,24 @@
+name: "federal-criminal-sentencing"
+output: 
+  html_document:
+    theme: united
+    highlight: kate
+    toc: yes
+    toc_float: yes
+    # css: style.css
+navbar:
+  title: "Federal District Courts and Race-Based Criminal Sentencing Disparities"
+  subtitle: "Analysis with Linear Regression"
+  left:
+    - text: "Home"
+      href: index.html
+    # - text: "Introduction"
+    #   href: introduction.html
+    - text: "Background"
+      href: background.html
+    - text: "Exploratory Data Analysis"
+      href: sentencing-eda.html
+    - text: "Regression Analysis"
+      href: analysis.html
+    - text: "Additional Results"
+      href: results.html

@@ -1,0 +1,58 @@
+---
+title: "Federal District Courts and Race-Based Criminal Sentencing Disparities"
+subtitle: "Analysis with Linear Regression"
+author: "Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik, Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas Wakefield \n"
+date: "`r format(Sys.Date(),'%B %d, %Y')`"
+---
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      cache = TRUE,
+                      fig.width = 4,
+                      fig.height = 4)
+```
+
+---
+
+This work is governed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+Citation: Laurie Baker, Helen Grundman, Lily Khadjavi, Saeja Kim, Momin Malik, Ariana Mendible, Omayra Ortega, José Pabón, Chad M. Topaz, Thomas Wakefield, and Institute for the Quantitative Study of Inclusion, Diversity, and Equity (QSIDE), 2023.
+
+---
+
+# Acknowledgments
+
+This project started at the Institute for Computational and Experimental Research on Mathematics (ICERM) as part of the week-long workshop "Educating at the Intersection of Data Science and Social Justice," organized by Ron Buckmire, Drew Lewis, Omayra Ortega, Katharine Ott, and Matt Salamone. This workshop was part of a summer program on "Data Science and Social Justice: Networks, Policy, and Education," organized by Carrie Diaz Eaton, Joseph Hibdon, Drew Lewis, Jessica Libertini, Omayra Ortega, Victor Piercey, Björn Sandstede, Talitha Washington, Tian An Wong, and Heather Zinn Brooks.
+
+# Introduction
+
+Welcome to a case study within the Data4Justice curriculum developed by the [Institute for the Quantitative Study of Inclusion, Diversity, and Equity (QSIDE)](http://www.qsideinstitute.org). This case study is designed to help you learn data science skills in a social justice context. At QSIDE, we hope that our curriculum will be used by anyone and everyone who is interested in helping to right wrongs by using quantitative tools. This case study should be accessible to advanced high school students, to undergraduate students, and to more experienced academics in any field who would like to learn new skills and ideas. QSIDE also envisions our case study being used by individuals working in industry, government, and the nonprofit sphere, as well as any hobbyists and other members of the general public wanting to challenge themselves. In short, if you are interested and positioned to learn more about the interface of social justice and data science, this case study is for you.
+
+If you are a high school teacher, a college or university faculty member, or serve in any other instructional capacity, consider using this case study in ways that are appropriate for your audience. Less experienced audiences might require a step-by-step approach, proceeding through the case study in a linear manner at a pace that is not rushed. More experienced audiences could benefit from using the beginning parts of the case study, and then being challenged to do more open-ended exploration. The case study could also be used as the basis for a data hackathon event.
+
+If you are new to data science in R/Rstudio, before you embark on this case study, we strongly recommend working through the case study on [Diversity of Artists in Major U.S. Museums](https://htmlpreview.github.io/?https://github.com/qsideinstitute/Data4Justice-Curriculum/blob/main/Data4Justice-Curriculum-v4.html), which will provide some familiarity with R fundamentals and with exploratory data analysis. This current case study can be viewed as a tool to cement and expand upon the concepts shared in the previous Diversity of Artists in Major U.S. Museums case study. 
+
+This case study assumes that you have access to RStudio, a programming environment built on the statistical computing language R. If you want to use RStudio on your own computer, you should first [install R](https://cran.r-project.org), and then [install RStudio](https://www.rstudio.com/products/rstudio/download/#download). Alternatively, you can register for a free account with [Posit Cloud](https://posit.cloud), an online version of RStudio that you can access through any standard web browser. 
+
+R is a powerful language, made even more powerful by additional free software packages that enhance its functionality. Regardless of how you run RStudio, you will need access to the packages below, which are automatically activated in the code that produces this document. Make sure you download these packages using the `Packages` tab in RStudio and run the commands below before proceeding with this case study.
+
+```{r, eval = FALSE}
+library(tidyverse)
+library(ggridges)
+library(tidycensus)
+library(palmerpenguins)
+library(gridExtra)
+library(broom)
+library(emmeans)
+library(kableExtra)
+```
+
+QSIDE is a 501(c)3 tax-exempt nonprofit organization. Initiatives like our Data4Justice curriculum require resources to produce, and we depend on a public that is willing to support social justice initiatives. Anyone is welcome to use this document for free, but we ask those who are able to [please make a donation to QSIDE](https://qsideinstitute.org/support-us/donate/) so that we can maintain our innovative research, action, and education efforts at the interface of data science and social justice. Additionally, we ask anyone using any or all of this document to cite it properly using the citation above.
+
+Now let's get to learning!
+
+<!-- Add previous/next buttons to bottom of page -->
+<ul class="pager"> <!--this is the style of the button-->
+<li><a href="#">Back to Top</a></li> <!--This button takes me to the table of contents-->
+<li><a href="background.html">Next: Background</a></li> <!--This button takes me to the previous page-->
+</ul>
