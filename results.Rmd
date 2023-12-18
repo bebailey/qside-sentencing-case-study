@@ -10,7 +10,7 @@ Throughout our analyses, we focused on the multiple $R^2$ value, although the or
 
 The authors further refine the analysis by looking at individual districts rather than the federal court system nationwide in the District II Model, which we partially replicated in this case study. We saw from first column of [Figure 2](https://www.nature.com/articles/s41599-023-01879-5/figures/2) (copied below) that Black defendants receive longer sentences than white defendants in at least 11 districts and ARI defendants receive longer sentences than white defendants in at least 3 districts. 
 
-![](photos/fedsent_fig2.jpg)
+![](fig/fedsent_fig2.jpg)
 
 The authors provide two additional visualizations summarizing their evidence of racial disparities in federal criminal sentencing, focusing in particular on differences in sentence lengths between White defendants and all other races. [Figure 3](https://www.nature.com/articles/s41599-023-01879-5/figures/3) below displays the 95% confidence intervals for the sentence differential, while the final [Figure 4](https://www.nature.com/articles/s41599-023-01879-5/figures/4) below highlights the geographic locations of these districts with sentencing differentials in the U.S. 
 
