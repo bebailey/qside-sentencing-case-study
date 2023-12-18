@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Background</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Federal District Courts and Race-Based Criminal Sentencing Disparities</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="background.html">Background</a>
+</li>
+<li>
+  <a href="sentencing-eda.html">Exploratory Data Analysis</a>
+</li>
+<li>
+  <a href="analysis.html">Regression Analysis</a>
+</li>
+<li>
+  <a href="results.html">Additional Results</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Background</h1>
+
+</div>
+
+
+<p>Our case study centers around issues of racial disparity in criminal
+sentencing, and is based on research performed by one of this case
+study’s authors. Before proceeding, take some time to read the original
+study, <a
+href="https://www.nature.com/articles/s41599-023-01879-5">Federal
+Criminal Sentencing: Race-Based Disparate Impact and Differential
+Treatment in Judicial Districts</a>. There may be some things in the
+paper that you don’t understand — perhaps just a few, or perhaps many.
+That’s ok. The goal of reading the paper is not to understand every
+detail, but rather to provide a first exposure to the material you’ll be
+working on and to get you excited about it. For convenience, here is the
+abstract.</p>
+<hr />
+<blockquote>
+<p><strong>Abstract</strong></p>
+<p>Race-based inequity in federal criminal sentencing is widely
+acknowledged, and yet our understanding of it is far from complete.
+Inequity may arise from several sources, including direct bias of
+courtroom actors and structural bias that produces racially disparate
+impacts. Irrespective of these sources, inequity may also originate from
+different loci within the federal system. We bring together the
+questions of the sources and loci of inequity. The purpose of our study
+is to quantify race-based disparate impact and differential treatment at
+the national level and at the level of individual federal judicial
+districts. We analyze over one-half million sentencing records publicly
+available from the United States Sentencing Commission database,
+spanning the years 2006 to 2020. At the system-wide level, Black and
+Hispanic defendants receive average sentences that are approximately 19
+months longer and 5 months longer, respectively. Demographic factors and
+sentencing guideline elements account for nearly 17 of the 19 months for
+Black defendants and all five of the months for Hispanic defendants,
+demonstrating the disparate impact of the system at the national level.
+At the individual district level, even after controlling for each
+district’s unique demographics and implementation of sentencing factors,
+14 districts show significant differences for minoritized defendants as
+compared to white ones. These unexplained differences are evidence of
+possible differential treatment by judges, prosecutors, and defense
+attorneys.</p>
+</blockquote>
+<hr />
+<p>In this case study, we won’t cover all of the results described in
+this paper, but we will cover some of the most important ones. Thinking
+about the distinction between observational and experimental case
+studies, this case study can be viewed as an observational study because
+the researchers are attempting to learn about the population of interest
+by sampling and observing patterns without manipulating any
+variables.</p>
+<div id="motivation" class="section level2">
+<h2>Motivation</h2>
+<p>What are race-based sentencing disparities, and why should we care?
+Race-based sentencing disparities in the United States refer to the
+marked and consistent differences in the severity and types of sentences
+given to individuals of different racial and ethnic backgrounds,
+convicted of the same or similar crimes. This disparity has been a
+subject of debate and research for many decades, as part of a broader
+discourse on racial bias in the criminal justice system. It has been
+consistently found that people of color are more likely to receive
+harsher sentences than their white counterparts.</p>
+<p>This phenomenon can be traced back to the historical context of the
+United States. Racial discrimination and bias have been entrenched in
+American society, and the criminal justice system is not immune to these
+systemic biases. The War on Drugs in the 1980s and 1990s, for example,
+disproportionately impacted communities of color, with crack cocaine
+offenses (more common among Black communities) punished far more
+severely than powder cocaine offenses (more common among white
+communities). This is despite the fact that both substances are
+pharmacologically identical.</p>
+<p>While legal changes have reduced some explicit forms of
+discrimination, research suggests that implicit bias and structural
+factors continue to contribute to sentencing disparities. For example,
+mandatory minimum sentencing laws can disproportionately impact people
+of color due to disparities in the types of crimes committed and the
+socioeconomic conditions that can lead to criminal behavior.</p>
+<p>From a social justice perspective, race-based sentencing disparities
+matter significantly. They reflect and perpetuate racial inequity,
+undermining the promise of equal treatment under the law that is a
+fundamental principle of democratic societies. They erode public trust
+in the legal system, making it more difficult for law enforcement and
+the courts to function effectively.</p>
+<p>Furthermore, these disparities contribute to the vicious cycle of
+systemic racism. Individuals who receive harsher sentences are more
+likely to face significant challenges in reintegrating into society
+post-incarceration, including limited employment opportunities,
+disruptions to family structures, and disenfranchisement. These
+challenges can increase the likelihood of recidivism, perpetuating
+racial disparities in economic and social outcomes.</p>
+<p>The existence of race-based sentencing disparities is a call to
+action for policy reform. This may include efforts to reduce mandatory
+minimum sentences, increase the use of alternatives to incarceration,
+provide bias training for judges and prosecutors, and implement more
+transparent, objective sentencing guidelines. Addressing these
+disparities is a crucial step toward realizing a more equitable and just
+society.</p>
+<p>In conclusion, race-based sentencing disparities in the U.S. not only
+reflect the systemic racism embedded within the criminal justice system
+but also exacerbate social and economic inequalities. Achieving social
+justice necessitates a comprehensive and diligent effort to rectify
+these disparities, creating a fair, unbiased system that upholds the
+tenet of equal treatment for all, regardless of race or ethnicity.
+Fixing our biased system can be aided by identifying the loci of racial
+inequity, which is the purpose of this case study.</p>
+</div>
+<div id="the-u.s.-federal-court-system" class="section level2">
+<h2>The U.S. federal court system</h2>
+<p>Before we dive into understanding race-based sentencing disparities
+in the United States, let’s understand some important context about the
+U.S. federal court system and federal sentencing. The United States
+federal court system is, at its core, a three-tiered structure, starting
+with district courts at the bottom, circuit courts in the middle, and
+the Supreme Court at the top.</p>
+<p>The district courts are the workhorses of the federal judiciary,
+handling the vast majority of federal cases. There are 94 federal
+judicial districts, including one or more districts in each state, as
+well as courts for the District of Columbia and Puerto Rico. Three
+territories of the United States – the Virgin Islands, Guam, and the
+Northern Mariana Islands – have district courts as well.</p>
+<p>Above the district courts are the United States courts of appeals.
+These courts are divided into 12 regional circuits across America, each
+of which hears appeals from the district courts located within its
+circuit. There’s also the Court of Appeals for the Federal Circuit,
+which has nationwide jurisdiction to hear appeals in specialized cases,
+such as those involving patent laws and cases decided by the U.S. Court
+of International Trade and the U.S. Court of Federal Claims.</p>
+<p>At the pinnacle of the federal court system is the Supreme Court of
+the United States, composed of nine justices. The Supreme Court mainly
+hears appeals from the circuit courts and state supreme courts, but it
+also has original jurisdiction over a small range of cases.</p>
+<p>Federal judges, including Supreme Court justices, are nominated by
+the President and confirmed by the Senate. They serve “during good
+behavior,” which effectively means they can hold their positions for
+life. A federal judge may also exit office through voluntary retirement
+or resignation.</p>
+<p>However, judges can be removed from office before their term ends if
+they’re impeached and convicted. Impeachment is a political process,
+initiated by the House of Representatives and decided by the Senate.
+Impeachment of federal judges has happened 15 times in U.S. history, and
+of these, eight judges have been convicted and removed from office.</p>
+<p>As of 2021, there were about 677 federal district court judgeships.
+These judges deal with a broad range of cases, including those related
+to federal laws, disputes between states, and issues involving the
+federal government.</p>
+</div>
+<div id="how-federal-sentencing-works" class="section level2">
+<h2>How federal sentencing works</h2>
+<p>In this module, we are considering sentencing patterns, and possible
+bias, in criminal cases adjudicated in the federal district courts from
+2006–2020. You might wonder what sorts of cases end up in these courts.
+The cases are restricted to those that involve federal statutes,
+interpretations of the US Constitution, or more than one state.</p>
+<p>In criminal cases resulting in a conviction, the crime statute itself
+may have sentencing restrictions, but beyond those, a judge has complete
+freedom in setting the length of the prison term. We will examine data
+at the national level as well as within individual districts, with an
+eye for detecting possible racial bias.</p>
+<p>In 1987, the United States Sentencing Commission created sentencing
+guidelines for Federal Courts. These guidelines prescribe a range of
+possible prison terms, taking into account both the severity of the
+crime and the prior criminal history of the defendant, as well as
+numerous possible mitigating factors (ones that may call for shortening
+the sentence) and aggravating factors (ones that may call for
+lengthening the sentence). Although these guidelines were initially
+mandatory, a 2005 Supreme Court ruling changed them to being only
+advisory, returning great freedom in sentencing to each individual
+judge.</p>
+</div>
+<div id="introduction-to-the-data" class="section level2">
+<h2>Introduction to the data</h2>
+<p>We will analyze the over one-half million sentencing records spanning
+the years 2006 to 2020 provided by the U.S. Sentencing Commission.
+Publicly available data is usually quite messy, with many missing and
+ambiguous entries. For this reason, you will be using a curated copy,
+that is, one that has been “cleaned up” (directions for obtaining the
+curated copy is in the following section of this module). The sentence
+lengths we are using are given in months and do not include probation
+nor alternative confinement. Since our aim is to compare lengths of
+prison sentences imposed, we have eliminated from the data set any cases
+involving non-citizens–those sentences frequently involve deportation,
+which is not comparable to prison terms. We combined the information
+from some variables (creating new variables) and eliminated incomplete
+data items, that is entire records, for defendants for whom we are not
+given sufficient information. We have eliminated the (relatively few)
+records with sentence lengths of more than 470 months, but retained
+those with life sentences, which have been coded by the Commission as
+470 months. Finally, because there are very few defendants sentenced in
+the district court of the Northern Mariana Islands, those items were
+also eliminated.</p>
+<p>The data come from two sources: the pre-sentencing report and the
+Statement of Reasons. The pre-sentencing report is prepared by the
+District’s Probation Office and based on a post-trial, pre-sentencing
+investigation including an interview with the defendant. A draft of this
+report is issued to the attorneys for comments and corrections and a
+final version is given to the attorneys and judge. The Statement of
+Reasons is a form filled out by the judge explaining/supporting the
+sentence imposed.</p>
+<div id="explanation-of-variables" class="section level3">
+<h3>Explanation of variables</h3>
+<p>The two main variables used in the non-mandatory guidelines for
+sentencing are criminal history (<code>criminal_history</code>) and an
+indicator of the severity of the crime (<code>all_adjustments</code>).
+The two variables are combined, using a table, to determine the
+recommended range of the sentence.</p>
+<p>The variable <code>criminal_history</code> is coded as a value 1 to
+6. Prior convictions are assigned points depending on the number of
+prior convictions, length(s) of sentence(s), and whether or not past
+crimes involved violence. The points are then summed and translated into
+a criminal history category represented by the
+<code>criminal_history</code> values 1 through 6. A value of 1, for
+example, would refer to a defendant with at most one conviction, where
+that conviction resulted in a sentence of less than 60 days. As an
+additional example, a defendant who has three prior convictions with
+sentences of over 13 months and two with sentences between 2 and 13
+months would be assigned a total of 13 points, yielding the criminal
+history category 6. With only one prior conviction of each type, the
+category would be 3. The calculation is not quite this simple, with many
+adjustments and some types of convictions and very old convictions being
+ignored.</p>
+<p>The variable <code>all_adjustments</code> is a rating of the
+<em>offense level</em> (how severe the crime is) with
+<em>adjustments</em> (added considerations that call for higher or lower
+offense level), as defined by the US Sentencing Commission’s Sentencing
+Guidelines Manual and interpreted by the US Probation Office and/or the
+Presiding Judge. There are 43 levels where, for example, first degree
+murder has a base level (that is, level prior to adjustments) of 43 and
+trespassing has a base level of 4. Two additional variables,
+<code>base_chapter2_adjustments</code> and
+<code>base_chapter2_3_adjustments</code>, have to do with the derivation
+of <code>all_adjustments</code>, but you can ignore these variables for
+the purposes of this case study.</p>
+<p>Apart from <code>criminal_history</code> and
+<code>all_adjustments</code>, there are several variables related to the
+identity of defendants:</p>
+<ul>
+<li><code>age</code>, which refers to a defendant’s age in years.</li>
+<li><code>sex</code>, which has been coded as a binary variable 0 and 1,
+where 0 is “Male” and 1 is “Female”.</li>
+<li><code>educ</code>, which refers to a defendant’s educational
+attainment which consists of 4 levels (1 refers to a defendant having
+less than high school graduation, 3 refers to a high school graduate, 5
+means having some college, and 6 means college graduate), and</li>
+<li><code>race</code>, which refers to a defendant’s race and has levels
+“black”, “hispanic”, “white” and “other”.</li>
+</ul>
+<p>A key motivation for this work is exploring how our personal and
+racial identities influence the judicial sentencing. In a fair,
+democratic system this identity or perceived identity should not affect
+how we are treated by the justice system. It is important to note that
+these characteristics are not independent of one another but can
+intersect and interact with one another. This combined effect is known
+as intersectionality. The Center for Intersectional Justice describes
+the concept of intersectionality as: “the ways in which systems of
+inequality based on gender, race, ethnicity, sexual orientation, gender
+identity, disability, class and other forms of discrimination
+‘intersect’ to create unique dynamics and effects” (Ref: <a
+href="https://www.intersectionaljustice.org/what-is-intersectionality">Center
+for Intersectional Justice</a>, July 20, 2023).</p>
+<p>Let’s take a moment to also consider how these identity-based
+variables were defined. Sex, for example, is defined in a pre-sentencing
+report that comes out of the investigation done by the probation office.
+This goes to the attorneys and also comes out of an interview with the
+individual. It should be noted that there are only two categories, so it
+is likely that there might be only two options possible for the
+individual. Not only is this challenging in that it restricts a
+defendant’s identity to two rigid categories, but a binary variable will
+not reflect sentenced individuals’ gender identity and excludes several
+groups, such as non-binary individuals, altogether. Therefore, a
+limitation of this study comes through in the “levels” of each variable
+being predetermined by the data-collecting institutions we are relying
+on. It is critical that in such instances we not only acknowledge this
+limitation, but contextualize our analysis and inferences with this
+knowledge.</p>
+<!-- Attempted to write this section above, but could clarify/add based on these notes:
+- See Background section or link to official report for more information
+- Discuss how a binary variable will not reflect sentenced individuals gender identity and excludes several groups. It is also limiting in nature.
+- Discuss difference between sex and gender
+- Discuss who has defined this variable and why this is problematic
+- Discuss the limitations and how this affects the analysis and inferences we can make.
+- Update sex label with more appropriate label based on Background research. 
+
+Also to possibly add: explaining why we are going to use "ARI" rather than "other" for the race category -->
+<p>The nine other variables in the data set refer to information about
+the court cases themselves:</p>
+<ul>
+<li><code>year</code>, which describes the year in which the court case
+took place,</li>
+<li><code>sentence_length</code>, the length prescribed to a defendant
+in months,</li>
+<li><code>guilty_plea</code>, where 0 means the defendant did not plead
+guilty and 1 means the defendant did plead guilty,
+<!-- check this! --></li>
+<li><code>grid_cell</code>, which is a term that represents the
+interaction between <code>criminal_history</code> and
+<code>all_adjustments</code>,</li>
+<li><code>mandatory_min</code>, which signifies whether or not the court
+case included a mandatory minimum sentence,</li>
+<li><code>gov_departures</code>, which tracks government sponsored
+downward departures, and</li>
+<li><code>district</code>, which refers to the district where the trial
+took place.</li>
+</ul>
+<p>As you work through the analyses in this case study, you might return
+to this background information as needed to remind yourself of the
+context of the data.</p>
+<!-- Add previous/next buttons to bottom of page -->
+<ul class="pager">
+<!--this is the style of the button-->
+<li>
+<a href="index.html">Back to Home</a>
+</li>
+<!--This button takes me to the table of contents-->
+<li>
+<a href="sentencing-eda.html">Next: Exploratory Data Analysis</a>
+</li>
+<!--This button takes me to the previous page-->
+</ul>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

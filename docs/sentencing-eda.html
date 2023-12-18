@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Exploratory Data Analysis</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Federal District Courts and Race-Based Criminal Sentencing Disparities</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="background.html">Background</a>
+</li>
+<li>
+  <a href="sentencing-eda.html">Exploratory Data Analysis</a>
+</li>
+<li>
+  <a href="analysis.html">Regression Analysis</a>
+</li>
+<li>
+  <a href="results.html">Additional Results</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Exploratory Data Analysis</h1>
+
+</div>
+
+
+<!-- Load packages -->
+<p>Alright, let’s start digging into the data! Whenever you are handed a
+new data set, you want to read in the data so you can view it in RStudio
+and perform an Exploratory Data Analysis (EDA).</p>
+<div id="reading-in-the-data" class="section level2">
+<h2>Reading in the data</h2>
+<p>You can read in your data using <code>read_csv()</code> and create a
+variable named <code>us_sent</code> that refers to the dataset.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>us_sent <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/cleaned_data_renamed.csv&quot;</span>)</span></code></pre></div>
+<p>To view the data in a new tab within RStudio, you can use the
+<code>View()</code> function. Because this is an interactive RStudio
+function that doesn’t work when we knit the document, we have set up our
+document so that the code can be viewed below but not actually run when
+we knit (specifically, we used the code chunk option
+<code>eval = FALSE</code>).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">View</span>(us_sent)</span></code></pre></div>
+</div>
+<div id="data-structure-and-contents" class="section level2">
+<h2>Data structure and contents</h2>
+<p>As you may remember, in a tidy data set, each row is an observation,
+each column is a variable, and each cell is a value. In the case of the
+federal criminal sentencing data, each row represents an individual who
+was sentenced in the federal district court system in the U.S. in one of
+the country’s 94 districts.</p>
+<p>When we start exploring a data set, we will want to think about some
+key questions using the four W’s: who, what, when, and where.
+Specifically, you might ask in the context of this study: who is in our
+data set? What was the sentence? When was the individual was sentenced?
+Where did the sentence occur?</p>
+<p>Can you guess which variables pertain to each question? Let’s inspect
+our variables, which are in the columns, and see if that helps. There
+are several functions we can use to do this:</p>
+<ul>
+<li><p><code>names()</code> will provide the names of the columns in the
+data set</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">names</span>(us_sent)</span></code></pre></div>
+<pre><code>##  [1] &quot;sentence_length&quot;             &quot;age&quot;                        
+##  [3] &quot;sex&quot;                         &quot;educ&quot;                       
+##  [5] &quot;year&quot;                        &quot;guilty_plea&quot;                
+##  [7] &quot;base_chapter2_adjustments&quot;   &quot;base_chapter2_3_adjustments&quot;
+##  [9] &quot;all_adjustments&quot;             &quot;grid_cell&quot;                  
+## [11] &quot;mandatory_min&quot;               &quot;gov_departures&quot;             
+## [13] &quot;district&quot;                    &quot;race&quot;                       
+## [15] &quot;criminal_history&quot;</code></pre></li>
+<li><p><code>summary()</code> will provide the names of the columns in
+the data set along with a brief numeric or qualitative summary of each
+variable</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">summary</span>(us_sent)</span></code></pre></div>
+<pre><code>##  sentence_length       age             sex              educ      
+##  Min.   :  0.00   Min.   :16.00   Min.   :0.0000   Min.   :1.000  
+##  1st Qu.: 12.03   1st Qu.:28.00   1st Qu.:0.0000   1st Qu.:1.000  
+##  Median : 41.00   Median :35.00   Median :0.0000   Median :3.000  
+##  Mean   : 62.96   Mean   :36.96   Mean   :0.1681   Mean   :3.101  
+##  3rd Qu.: 87.00   3rd Qu.:44.00   3rd Qu.:0.0000   3rd Qu.:5.000  
+##  Max.   :470.00   Max.   :97.00   Max.   :1.0000   Max.   :6.000  
+##       year       guilty_plea     base_chapter2_adjustments
+##  Min.   :2006   Min.   :0.0000   Min.   :-8.00            
+##  1st Qu.:2009   1st Qu.:0.0000   1st Qu.:16.00            
+##  Median :2013   Median :0.0000   Median :24.00            
+##  Mean   :2013   Mean   :0.0454   Mean   :23.21            
+##  3rd Qu.:2017   3rd Qu.:0.0000   3rd Qu.:30.00            
+##  Max.   :2020   Max.   :1.0000   Max.   :53.00            
+##  base_chapter2_3_adjustments all_adjustments  grid_cell         mandatory_min  
+##  Min.   : 1.00               Min.   : 1.00   Length:518719      Mode :logical  
+##  1st Qu.:16.00               1st Qu.:14.00   Class :character   FALSE:453517   
+##  Median :24.00               Median :21.00   Mode  :character   TRUE :65202    
+##  Mean   :23.52               Mean   :21.31                                     
+##  3rd Qu.:30.00               3rd Qu.:28.00                                     
+##  Max.   :64.00               Max.   :43.00                                     
+##  gov_departures    district             race           criminal_history
+##  Mode :logical   Length:518719      Length:518719      Min.   :1.000   
+##  FALSE:417903    Class :character   Class :character   1st Qu.:1.000   
+##  TRUE :100816    Mode  :character   Mode  :character   Median :2.000   
+##                                                        Mean   :2.655   
+##                                                        3rd Qu.:4.000   
+##                                                        Max.   :6.000</code></pre></li>
+<li><p><code>str()</code> will display (sometimes complex) details of
+the internal structure of the R object, including the table dimensions,
+variable names, variable types, and the first 10 observations for each
+variable within a data table</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">str</span>(us_sent)</span></code></pre></div>
+<pre><code>## spc_tbl_ [518,719 × 15] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+##  $ sentence_length            : num [1:518719] 0.46 90 65 87 60 62 84 120 53 0 ...
+##  $ age                        : num [1:518719] 36 21 35 26 30 23 29 26 45 36 ...
+##  $ sex                        : num [1:518719] 0 0 0 0 0 0 0 0 0 1 ...
+##  $ educ                       : num [1:518719] 3 3 1 1 3 5 1 3 3 3 ...
+##  $ year                       : num [1:518719] 2006 2006 2006 2006 2006 ...
+##  $ guilty_plea                : num [1:518719] 0 0 0 0 0 0 0 0 0 0 ...
+##  $ base_chapter2_adjustments  : num [1:518719] 38 18 28 32 28 28 28 14 20 20 ...
+##  $ base_chapter2_3_adjustments: num [1:518719] 38 18 28 32 28 28 26 14 20 20 ...
+##  $ all_adjustments            : num [1:518719] 35 15 25 29 26 25 23 34 17 17 ...
+##  $ grid_cell                  : chr [1:518719] &quot;XFOLSOR35XCRHISSR5&quot; &quot;XFOLSOR15XCRHISSR4&quot; &quot;XFOLSOR25XCRHISSR2&quot; &quot;XFOLSOR29XCRHISSR3&quot; ...
+##  $ mandatory_min              : logi [1:518719] FALSE TRUE FALSE FALSE FALSE TRUE ...
+##  $ gov_departures             : logi [1:518719] TRUE FALSE FALSE FALSE FALSE FALSE ...
+##  $ district                   : chr [1:518719] &quot;Dist of Columbia&quot; &quot;Dist of Columbia&quot; &quot;Dist of Columbia&quot; &quot;Dist of Columbia&quot; ...
+##  $ race                       : chr [1:518719] &quot;white&quot; &quot;black&quot; &quot;black&quot; &quot;black&quot; ...
+##  $ criminal_history           : num [1:518719] 5 4 2 3 5 1 5 6 4 1 ...
+##  - attr(*, &quot;spec&quot;)=
+##   .. cols(
+##   ..   sentence_length = col_double(),
+##   ..   age = col_double(),
+##   ..   sex = col_double(),
+##   ..   educ = col_double(),
+##   ..   year = col_double(),
+##   ..   guilty_plea = col_double(),
+##   ..   base_chapter2_adjustments = col_double(),
+##   ..   base_chapter2_3_adjustments = col_double(),
+##   ..   all_adjustments = col_double(),
+##   ..   grid_cell = col_character(),
+##   ..   mandatory_min = col_logical(),
+##   ..   gov_departures = col_logical(),
+##   ..   district = col_character(),
+##   ..   race = col_character(),
+##   ..   criminal_history = col_double()
+##   .. )
+##  - attr(*, &quot;problems&quot;)=&lt;externalptr&gt;</code></pre></li>
+<li><p><code>glimpse()</code> is a simplified version of
+<code>str()</code> that only displays the dimensions, variable names,
+variable types, and the first set of observations for each variable
+within a data table (how many observations depends on the width of your
+output)</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">glimpse</span>(us_sent)</span></code></pre></div>
+<pre><code>## Rows: 518,719
+## Columns: 15
+## $ sentence_length             &lt;dbl&gt; 0.46, 90.00, 65.00, 87.00, 60.00, 62.00, 8…
+## $ age                         &lt;dbl&gt; 36, 21, 35, 26, 30, 23, 29, 26, 45, 36, 44…
+## $ sex                         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, …
+## $ educ                        &lt;dbl&gt; 3, 3, 1, 1, 3, 5, 1, 3, 3, 3, 3, 5, 1, 3, …
+## $ year                        &lt;dbl&gt; 2006, 2006, 2006, 2006, 2006, 2006, 2006, …
+## $ guilty_plea                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+## $ base_chapter2_adjustments   &lt;dbl&gt; 38, 18, 28, 32, 28, 28, 28, 14, 20, 20, 30…
+## $ base_chapter2_3_adjustments &lt;dbl&gt; 38, 18, 28, 32, 28, 28, 26, 14, 20, 20, 30…
+## $ all_adjustments             &lt;dbl&gt; 35, 15, 25, 29, 26, 25, 23, 34, 17, 17, 27…
+## $ grid_cell                   &lt;chr&gt; &quot;XFOLSOR35XCRHISSR5&quot;, &quot;XFOLSOR15XCRHISSR4&quot;…
+## $ mandatory_min               &lt;lgl&gt; FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FA…
+## $ gov_departures              &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
+## $ district                    &lt;chr&gt; &quot;Dist of Columbia&quot;, &quot;Dist of Columbia&quot;, &quot;D…
+## $ race                        &lt;chr&gt; &quot;white&quot;, &quot;black&quot;, &quot;black&quot;, &quot;black&quot;, &quot;black…
+## $ criminal_history            &lt;dbl&gt; 5, 4, 2, 3, 5, 1, 5, 6, 4, 1, 1, 1, 2, 1, …</code></pre></li>
+</ul>
+<blockquote>
+<p>Note: You can use the built in R help documentation to learn more
+about each function by typing a question mark followed by the name of
+the function in the console, e.g. <code>?str()</code></p>
+</blockquote>
+</div>
+<div id="types-of-variables" class="section level2">
+<h2>Types of variables</h2>
+<p>What is halfway between 0 and 1? It is 1/2. What is halfway between
+horse and dog? There is no such thing! Thinking about each type of data
+is very important so that we don’t code silly things like the mean of
+animal species.</p>
+<p>There are two main types of data: <strong>categorical data</strong>
+and <strong>numerical data</strong>. Some examples of categorical data
+would be color, ethnicity, employment status, or states/countries. These
+have unique values, like California or Oregon. In other words,
+categorical variables take on discrete, finite values. In R, these
+variables might show up as characters (<code>chr</code>),
+<code>TRUE</code> or <code>FALSE</code> statements which are called
+logical vectors (<code>lgl</code>), coded as the integers
+(<code>int</code>), or factors (<code>fct</code>).</p>
+<p>On the other hand, numerical data is in number form. Some examples of
+numerical data are temperature, height, and salary. It makes perfect
+sense to be 165.8 cm tall or for the temperature to be 82.4 degrees
+outside. In R, these variables might show up as doubles
+(<code>dbl</code>) or integers (<code>int</code>).</p>
+<p>There are some confusing data types that use numbers to
+<em>represent</em> categorical data, like zip code. You may live in the
+zip code 90201, which is a number, but you can’t live in the zip code
+90210.3. Only whole numbers, and specific ones at that, make sense here.
+We will learn more about using numbers to represent categorical data in
+this lesson.</p>
+<p>Finally, dates and times are special variables that are treated
+differently depending on the context and structure of the values. In
+some cases, especially when there are few discrete values, dates and
+times might be treated as categorical variables. In some formats and in
+other cases, dates and times might be treated as numerical variables
+(note: even though a date or time might be represented as a number, this
+is not the type of numerical variable where it makes sense to do math in
+the typical way!). When data are specific dates (with day, month, and
+year) and/or times (with hours, minutes, seconds), then R has special
+data types that capture dates and times along a continuum. We don’t need
+to worry about that for this case study, though!</p>
+<p><strong>Can you identify which data type each variable in the federal
+criminal sentencing data is?</strong></p>
+<p>You may notice that some variables’ data types are not what you would
+expect. Oftentimes, R will automatically assign data types to variables
+in ways you don’t want.</p>
+<p>Let’s take the variable <code>sex</code>, for example. Remember that
+<code>sex</code> has been coded as a binary variable 0 and 1, where 0 is
+“Male” and 1 is “Female”. We can confirm this using
+<code>distinct()</code>, a function that displays all unique values
+under a specified column.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>us_sent <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">distinct</span>(sex)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 1
+##     sex
+##   &lt;dbl&gt;
+## 1     0
+## 2     1</code></pre>
+<p>We can also see that <code>sex</code> is currently classified as a
+<code>dbl</code> above. Let’s change that to the <code>fct</code> data
+type so R recognizes the variable as categorical. To deal with this, we
+can change the data types of variables using two important functions:
+<code>mutate()</code> and <code>factor()</code>.</p>
+<p>You can think of <code>mutate()</code> as being a function that
+essentially replaces the a column in the data set with a new one. In
+this case, we are replacing the <code>sex</code> variable column that is
+coded as <code>dbl</code> with a new column for <code>sex</code> coded
+as <code>fct</code>. We can use the function <code>factor()</code> to
+specify the two levels of <code>sex</code>, 0 and 1, and labeling each
+level as “Male” and “Female” respectively. Using this process, we are
+telling R to consider <code>sex</code> to be a categorical variable with
+two levels.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>us_sent <span class="ot">&lt;-</span> us_sent <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sex =</span> <span class="fu">factor</span>(sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Male&quot;</span>, <span class="st">&quot;Female&quot;</span>)))</span></code></pre></div>
+<p>Let’s check our work by using <code>glimpse()</code> again:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">glimpse</span>(us_sent)</span></code></pre></div>
+<pre><code>## Rows: 518,719
+## Columns: 15
+## $ sentence_length             &lt;dbl&gt; 0.46, 90.00, 65.00, 87.00, 60.00, 62.00, 8…
+## $ age                         &lt;dbl&gt; 36, 21, 35, 26, 30, 23, 29, 26, 45, 36, 44…
+## $ sex                         &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, …
+## $ educ                        &lt;dbl&gt; 3, 3, 1, 1, 3, 5, 1, 3, 3, 3, 3, 5, 1, 3, …
+## $ year                        &lt;dbl&gt; 2006, 2006, 2006, 2006, 2006, 2006, 2006, …
+## $ guilty_plea                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+## $ base_chapter2_adjustments   &lt;dbl&gt; 38, 18, 28, 32, 28, 28, 28, 14, 20, 20, 30…
+## $ base_chapter2_3_adjustments &lt;dbl&gt; 38, 18, 28, 32, 28, 28, 26, 14, 20, 20, 30…
+## $ all_adjustments             &lt;dbl&gt; 35, 15, 25, 29, 26, 25, 23, 34, 17, 17, 27…
+## $ grid_cell                   &lt;chr&gt; &quot;XFOLSOR35XCRHISSR5&quot;, &quot;XFOLSOR15XCRHISSR4&quot;…
+## $ mandatory_min               &lt;lgl&gt; FALSE, TRUE, FALSE, FALSE, FALSE, TRUE, FA…
+## $ gov_departures              &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
+## $ district                    &lt;chr&gt; &quot;Dist of Columbia&quot;, &quot;Dist of Columbia&quot;, &quot;D…
+## $ race                        &lt;chr&gt; &quot;white&quot;, &quot;black&quot;, &quot;black&quot;, &quot;black&quot;, &quot;black…
+## $ criminal_history            &lt;dbl&gt; 5, 4, 2, 3, 5, 1, 5, 6, 4, 1, 1, 1, 2, 1, …</code></pre>
+<p>Great! It worked. <code>sex</code> is now of the <code>fct</code>
+data type. Now we can use this process to change the rest of the
+variables with incorrect data types. You can see that we don’t always
+need to add labels, we just do that when we think it might be useful.
+Also notice we are treating <code>year</code> as a categorical variable
+for our analyses.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>us_sent <span class="ot">&lt;-</span> us_sent <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">educ =</span> <span class="fu">factor</span>(educ, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">6</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;Less than HS&quot;</span>, </span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>                                  <span class="st">&quot;HS Grad&quot;</span>, </span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>                                  <span class="st">&quot;Some College&quot;</span>, </span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>                                  <span class="st">&quot;College Grad&quot;</span>)),</span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>         <span class="at">year =</span> <span class="fu">factor</span>(year),</span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>         <span class="at">criminal_history =</span> <span class="fu">factor</span>(criminal_history),</span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a>         <span class="at">guilty_plea =</span> <span class="fu">factor</span>(guilty_plea))</span></code></pre></div>
+<p>Now that our variable data types are sorted out, let’s change one
+final component of our data set. Let’s capitalize each category of the
+<code>race</code> variable using <code>str_to_title()</code>. Then we
+can use <code>fct_recode()</code> to turn <code>race</code> into a
+factor while also changing the “Other” level to “ARI”, which stands for
+“another racial identity”, to clarify what we mean.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>us_sent <span class="ot">&lt;-</span> us_sent <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">race =</span>  <span class="fu">str_to_title</span>(race),</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>         <span class="at">race =</span> <span class="fu">fct_recode</span>(race, <span class="st">&quot;ARI&quot;</span> <span class="ot">=</span> <span class="st">&quot;Other&quot;</span>))</span></code></pre></div>
+<p>You can use <code>View(us_sent)</code> again to take a look at all
+the alterations we made to the dataset.</p>
+<p>Now that we have our data types sorted out, we can start exploring
+the data!</p>
+</div>
+<div id="how-to-visualize-relationships" class="section level2">
+<h2>How to visualize relationships</h2>
+<p>A good practice to do with a new data set is to explore it through
+visualization. We can get a sense of the individual distributions of
+each variable (you might refer back to the case study on <a
+href="https://htmlpreview.github.io/?https://github.com/qsideinstitute/Data4Justice-Curriculum/blob/main/Data4Justice-Curriculum-v4.html">Diversity
+of Artists in Major U.S. Museums</a> for an introduction to graphs of a
+single variable) and then move on to look at the relationships among two
+or more variables. As with single-variable graphs, the type of graph we
+use will depend on the types of variables we are exploring. We will walk
+through a few simple graphs below that allow us to look at relationships
+between variables.</p>
+<div id="two-numerical-variables" class="section level3">
+<h3>Two numerical variables</h3>
+<p>A <em>scatterplot</em> is typically used to visualize the
+relationship between two numerical variables. One variable, usually the
+<em>dependent</em> variable, goes on the <span
+class="math inline">\(y\)</span> axis, and the other variable goes on
+the <span class="math inline">\(x\)</span> axis, and each observation in
+the data is represented by a point on the graph.</p>
+<p>We will use a scatterplot to display how a defendant’s age relates to
+their sentence length. Recall, to use <code>ggplot()</code> from the
+<strong>ggplot2</strong> package, we start by indicating the data set we
+want to plot: <code>us_sent</code>. Then, we specify what our variables
+of interest are—in this case, we are interested in <code>age</code> and
+<code>sentence_length</code>. The command <code>geom_point()</code>
+specifies that we want to use a scatterplot to represent our data.</p>
+<p>There are many fun and useful modifications that change the way a
+scatterplot looks. For example, you can change the color of data points
+using <code>color</code>, you can change the size of data points using
+<code>size</code>, and you can specify the transparency of data points
+using <code>alpha</code> on scale of 0 = <em>fully transparent</em> to 1
+= <em>fully opaque</em>. It’s also good practice to come up with a
+useful title and good axis labels using the <code>labs()</code>
+command.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> sentence_length)) <span class="sc">+</span> </span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">0.5</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Sentence Length by Age&quot;</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Age (Years)&quot;</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Sentence Length (Months)&quot;</span>)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/sentence%20length%20by%20age-1.png" width="576" /></p>
+<p>What do you notice in this scatterplot? What do you wonder?</p>
+</div>
+<div id="one-numerical-and-one-categorical-variable"
+class="section level3">
+<h3>One numerical and one categorical variable</h3>
+<p>We just created a scatterplot with two numerical variables. Now we
+will see what happens if one variable is numerical and the other is
+categorical. Run the code below that plots <code>criminal_history</code>
+(a categorical variable) against <code>age</code> (a numerical
+variable).</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> criminal_history, <span class="at">y =</span> age)) <span class="sc">+</span> </span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>, </span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Age by Criminal History Level&quot;</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Criminal History Level&quot;</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Age (Years)&quot;</span>)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/criminal%20history%20by%20age-1.png" width="576" /></p>
+<p>You might think it’s a little difficult to see any clear patterns
+when using a scatterplot to examine one quantitative and one categorical
+variable because the points are so densely packed together. That’s why a
+scatterplot is generally <em>not</em> an appropriate graph to use in
+this situation. Instead, a more appropriate plot for this combination of
+variables is the side-by-side boxplot. You can create a side-by-side
+boxplot by simply switching out <code>geom_point()</code> with
+<code>geom_boxplot()</code> in the code above:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> criminal_history, <span class="at">y =</span> age)) <span class="sc">+</span> </span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>, </span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>               <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Age by Criminal History Level&quot;</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Criminal History Level&quot;</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Age (Years)&quot;</span>) </span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/boxplot%20age%20by%20criminal%20history-1.png" width="576" /></p>
+<blockquote>
+<p>Interpreting boxplots: The middle horizontal line on a boxplot refers
+to the median, or halfway point, of the data, where 50% of the values
+are above the median and 50% are below. The botton and top lines of the
+box represent the lower quartile and upper quartile respectively
+(meaning the lower 25% of the data points are below the lower quartile
+and the upper 25% of the data points are above the upper quartile). The
+verticle lines called “whiskers” extending from the box represent the
+rest of the data, which includes all points outside of the middle 50% of
+the data points, excluding any outliers. Lastly, any points outside of
+the box and “whiskers” are potential outliers.</p>
+</blockquote>
+<p>What patterns do you notice in this side-by-side boxplot? What do you
+wonder?</p>
+</div>
+<div id="two-categorical-variables" class="section level3">
+<h3>Two categorical variables</h3>
+<p>Let’s try one more scenario. What happens when you try to plot two
+categorical variables against each other using a scatterplot? Run the
+code below to plot sex against race (both categorical variables).</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> race, <span class="at">y =</span> sex)) <span class="sc">+</span> </span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>, </span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Race by Sex&quot;</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Race&quot;</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Sex&quot;</span>)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/scatterplot%20race%20by%20sex-1.png" width="576" /></p>
+<p>As you may have noted, scatterplots of two categorical variables are
+also not that useful for analysis and inference since they only display
+the way we’ve grouped our data and not any of the underlying patterns.
+As before, scatterplots are thus generally <em>not</em> appropriate
+displays for exploring the relationship between two categorical
+variables. Instead, frequency tables (shown below) or bar graphs
+(explored later) are better visualizations to use.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>us_sent <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>  <span class="fu">count</span>(sex, race) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>  <span class="co"># Add distribution of race within each sex</span></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">proportion =</span> <span class="fu">round</span>(<span class="fu">proportions</span>(n), <span class="dv">3</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 8 × 4
+##   sex    race          n proportion
+##   &lt;fct&gt;  &lt;fct&gt;     &lt;int&gt;      &lt;dbl&gt;
+## 1 Male   Black    160152      0.309
+## 2 Male   Hispanic  85305      0.164
+## 3 Male   ARI       22036      0.042
+## 4 Male   White    164017      0.316
+## 5 Female Black     23500      0.045
+## 6 Female Hispanic  18603      0.036
+## 7 Female ARI        5654      0.011
+## 8 Female White     39452      0.076</code></pre>
+<p>In the remainder of this lesson we will focus on comparisons where we
+have <em>at least one numerical variable</em>.</p>
+</div>
+</div>
+<div id="eda-of-federal-criminal-sentencing-data"
+class="section level2">
+<h2>EDA of federal criminal sentencing data</h2>
+<!-- - explain the different columns (linking to the background) -->
+<p>Now, let’s return to exploring the variables of interest. Remember,
+we want to know <em>who</em> is in our data set, <em>what</em> the
+sentence was, <em>when</em> the individual was sentenced, and
+<em>where</em> the sentence occurred.</p>
+<p>But first, how many columns of data did we have again? What were the
+names of those columns? Which tool can we use to find out? Do we
+remember?</p>
+<p>We can use the <code>names()</code> routine to remind ourselves of
+the variable names.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">names</span>(us_sent)</span></code></pre></div>
+<pre><code>##  [1] &quot;sentence_length&quot;             &quot;age&quot;                        
+##  [3] &quot;sex&quot;                         &quot;educ&quot;                       
+##  [5] &quot;year&quot;                        &quot;guilty_plea&quot;                
+##  [7] &quot;base_chapter2_adjustments&quot;   &quot;base_chapter2_3_adjustments&quot;
+##  [9] &quot;all_adjustments&quot;             &quot;grid_cell&quot;                  
+## [11] &quot;mandatory_min&quot;               &quot;gov_departures&quot;             
+## [13] &quot;district&quot;                    &quot;race&quot;                       
+## [15] &quot;criminal_history&quot;</code></pre>
+<p>We can see the fifteen column names in the output above. Now that we
+have these readily available, can you identify how our variables might
+correspond with each of these questions?</p>
+<p>You might have classified the variables as follows:</p>
+<!-- https://www.nature.com/articles/s41599-023-01879-5 -->
+<table>
+<thead>
+<tr class="header">
+<th align="left">Who</th>
+<th align="left">What</th>
+<th align="left">When</th>
+<th align="left">Where</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>age</code></td>
+<td align="left"><code>sentence_length</code></td>
+<td align="left"><code>year</code></td>
+<td align="left"><code>district</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>sex</code></td>
+<td align="left"><code>mandatory_min</code></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>educ</code></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><code>race</code></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>criminal_history</code></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"><code>guilty_plea</code></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p>Let’s start exploring the variables that fall under each of these key
+questions.</p>
+<div id="who" class="section level3">
+<h3>Who?</h3>
+<div id="sex" class="section level4">
+<h4>Sex</h4>
+<p>Let’s use <code>ggplot()</code> again to view the distribution of
+<code>sex</code> within our data set, this time using
+<code>geom_bar()</code> to display the data in a bar graph. Another
+difference from when we made a scatterplot above using
+<code>geom_point()</code> is that we are adding <code>fill</code> to
+make sure the bars in the bar graph are colored in. We can also add
+<code>scale_fill_viridis_d()</code> to automatically apply a certain
+color scheme to our plot.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> sex, <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Sex of Sentenced Individuals&quot;</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Sex&quot;</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of Individuals&quot;</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Sex&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>()</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/bar%20graph%20sex-1.png" width="480" /></p>
+<p>From this graph, we can see that there are far more males than
+females in our data set.</p>
+</div>
+<div id="race" class="section level4">
+<h4>Race</h4>
+<p>Let’s continue exploring through turning toward the <code>race</code>
+variable. We will start our exploration of <code>race</code> by using
+<code>distinct()</code> to remind ourselves of the levels of the
+<code>race</code> variable.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>us_sent <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>  <span class="fu">distinct</span>(race)</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 1
+##   race    
+##   &lt;fct&gt;   
+## 1 White   
+## 2 Black   
+## 3 ARI     
+## 4 Hispanic</code></pre>
+<p>We can once again use <code>ggplot()</code> to make a bar graph
+displaying the <code>race</code> variable. We can make use of
+<code>fct_infreq()</code>, which makes sure the bars in the plot are
+ordered largest to smallest from left to right instead of
+alphabetically.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_infreq</span>(race), <span class="at">fill =</span> race)) <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Race&quot;</span>,</span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Race of Sentenced Individuals&quot;</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of Individuals&quot;</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Race&quot;</span>) <span class="sc">+</span></span>
+<span id="cb29-7"><a href="#cb29-7" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>()</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/bar%20graph%20race-1.png" width="480" /></p>
+</div>
+<div id="race-and-sex" class="section level4">
+<h4>Race and sex</h4>
+<p>Now let’s look at how <code>race</code> and <code>sex</code> relate
+to one another. First, let’s look at the number of people in each
+combination using <code>count()</code> again.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>us_sent <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>  <span class="fu">count</span>(race, sex)</span></code></pre></div>
+<pre><code>## # A tibble: 8 × 3
+##   race     sex         n
+##   &lt;fct&gt;    &lt;fct&gt;   &lt;int&gt;
+## 1 Black    Male   160152
+## 2 Black    Female  23500
+## 3 Hispanic Male    85305
+## 4 Hispanic Female  18603
+## 5 ARI      Male    22036
+## 6 ARI      Female   5654
+## 7 White    Male   164017
+## 8 White    Female  39452</code></pre>
+<p>We can represent these two variables using a bar graph. Once again we
+will use <code>ggplot()</code> to create this plot. This time, since we
+are creating a bar graph displaying two different variables, we can
+define <code>race</code> as the <code>x</code> variable and have the
+colors of the bar graph correspond to the <code>sex</code> variable.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_infreq</span>(race), <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Race&quot;</span>,</span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Race and Sex of Sentenced Individuals&quot;</span>,</span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of Individuals&quot;</span>,</span>
+<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Sex&quot;</span>)  <span class="sc">+</span></span>
+<span id="cb32-7"><a href="#cb32-7" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>()</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/bar%20graph%20race%20by%20sex-1.png" width="480" /></p>
+<p>We can also create a proportional bar plot. All we need to add to our
+previous plot is <code>position = "fill"</code> within
+<code>geom_bar()</code>.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_infreq</span>(race), <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">&quot;fill&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Race&quot;</span>,</span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Race and Sex of Sentenced Individuals&quot;</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of Individuals&quot;</span>,</span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Sex&quot;</span>)  <span class="sc">+</span></span>
+<span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>()</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/stacked%20bar%20graph%20race%20by%20sex-1.png" width="480" /></p>
+</div>
+<div id="age" class="section level4">
+<h4>Age</h4>
+<p>We might want to explore what the age of different individuals is
+across districts. Let’s explore the districts of Maine, Rhode Island,
+and Vermont. We can use the <code>filter()</code> command to look at
+only these three districts of interest, and then make a stacked
+histogram of age colored by district.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a>us_sent <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>  <span class="fu">filter</span>(district <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Maine&quot;</span>, <span class="st">&quot;Rhode Island&quot;</span>, <span class="st">&quot;Vermont&quot;</span>)) <span class="sc">%&gt;%</span>  </span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">fill =</span> district)) <span class="sc">+</span></span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Distribution of Age in Maine, Rhode Island, and Vermont&quot;</span>,</span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Age&quot;</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Count&quot;</span>,</span>
+<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;District&quot;</span>)</span></code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="sentencing-eda_files/figure-html/stacked%20histogram%20age-1.png" width="576" /></p>
+<p>What do you notice about the ages represented in our data? Can you
+try plotting the ages for other districts to see how they differ from
+the three we’ve chosen for this plot?</p>
+<!--
+Note from original authors: 
+**To add**:
+- what do we divide by?
+- You may look at this plot and say that whites are sentenced at the federal district court more than black individuals. This is where it is important to look at the population in each district.
+
+**Future Directions**
+
+Bringing in the spatial district files
+
+- https://www.openicpsr.org/openicpsr/project/100069/version/V1/view
+- Downloading census data from the API.
+- Joining to census data
+- Limitations of census data
+- Other potential things to mention (the affect of aggregation and spatial scale). -->
+</div>
+</div>
+<div id="what" class="section level3">
+<h3>What?</h3>
+<p>Now that we explored the “Who?” question about our data, let’s move
+on to answering the “What?” question. Recall that
+<code>sentence_length</code> and <code>mandatory_min</code> are the
+variables that fall under this category, but we’ll focus only on
+sentence length for our data exploration.</p>
+<div id="sentence-length" class="section level4">
+<h4>Sentence length</h4>
+<p>To better understand <code>sentence_length</code>, we’ll display a
+histogram for this quantitative variable. A histogram gives us a visual
+representation of the frequency of values. We can change the width of
+each bin or choose a number of bins, and then the plot shows us how many
+sentences fell within each bin range of sentence lengths. We can also
+use <code>geom_vline()</code> to add some red vertical lines on the
+graph as a guide to think about common sentence lengths of 12, 60, 120,
+or 240 months, corresponding to 1, 5, 10, and 20 years.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> sentence_length)) <span class="sc">+</span></span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">60</span>, <span class="dv">120</span>, <span class="dv">240</span>), </span>
+<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, </span>
+<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Sentence Length (Months)&quot;</span>,</span>
+<span id="cb36-7"><a href="#cb36-7" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">&quot;Red dashed lines indicate 1, 5, 10, and 20 year sentences&quot;</span>,</span>
+<span id="cb36-8"><a href="#cb36-8" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of Individuals&quot;</span>,</span>
+<span id="cb36-9"><a href="#cb36-9" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Numbers of Individuals per Sentence Length&quot;</span>)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/histogram%20sentence-1.png" width="576" /></p>
+<p>What do you notice about the number of individuals per sentence
+length in our data set?</p>
+<p>While it may be useful to look at how sentence length in terms of
+months, we can also adjust the scale of our histogram to look at
+sentence length in terms of years. We can do so by simply dividing our
+<code>x</code> variable, <code>sentence_length</code>, by 12. We can
+also adjust our guiding red lines to examine the sentence lengths
+between 1, 5, 10, and 20 years:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> sentence_length <span class="sc">/</span> <span class="dv">12</span>)) <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb37-3"><a href="#cb37-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Sentence length in years&quot;</span>, </span>
+<span id="cb37-4"><a href="#cb37-4" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of individuals&quot;</span>) <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>), </span>
+<span id="cb37-6"><a href="#cb37-6" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, </span>
+<span id="cb37-7"><a href="#cb37-7" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Distribution of Number of Individuals by Sentence Length&quot;</span>,</span>
+<span id="cb37-9"><a href="#cb37-9" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">&quot;Red dashed lines indicate 1, 5, 10, and 20 year sentences&quot;</span>,</span>
+<span id="cb37-10"><a href="#cb37-10" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Sentence Length (Years)&quot;</span>, </span>
+<span id="cb37-11"><a href="#cb37-11" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Number of Individuals&quot;</span>)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/histogram%20sentence%20years-1.png" width="576" /></p>
+<p>We observe a high frequency over 0, meaning that many individuals who
+are convicted may in fact receive a sentence of 0 months. At the other
+extreme, we see a group of cases corresponding to 470 months, or about
+39 years, representing individuals who have been given a long sentence
+or possibly a life sentence.</p>
+<!-- [could further discuss skew, peaks and relate to sentencing table, etc.] -->
+</div>
+<div id="how-does-sentence-length-relate-to-criminal-history-level"
+class="section level4 tabset">
+<h4 class="tabset">How does sentence length relate to criminal history
+level?</h4>
+<!-- Note from original authors: How do sentence lengths relate to policy? -- insert blurb here? -->
+<p>Earlier we used a side-by-side boxplot to see how a numerical
+variable changes across levels of a categorical variable, but boxplots
+aren’t the only option. Let’s explore how sentence length varies by
+criminal history level using boxplots, violin plots
+(<code>geom_violin()</code>), and ridge plots
+(<code>geom_density_ridges()</code>).</p>
+<p>What do you learn from these plots? What do you see as the advantages
+and disadvantages of each type of plot?</p>
+<div id="boxplot" class="section level5">
+<h5>Boxplot</h5>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> criminal_history, <span class="at">y =</span> sentence_length,</span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a>                    <span class="at">fill =</span> criminal_history)) <span class="sc">+</span></span>
+<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Sentence Length (Months)&quot;</span>, </span>
+<span id="cb38-5"><a href="#cb38-5" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Criminal History Level&quot;</span>,</span>
+<span id="cb38-6"><a href="#cb38-6" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Distribution of Sentence Length by Criminal History Level&quot;</span>)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/sentence%20by%20criminal%20history%20boxplot-1.png" width="576" /></p>
+</div>
+<div id="ridge-plot" class="section level5">
+<h5>Ridge plot</h5>
+<p>Ridge plots are density plots within each level of a categorical
+variable. We’ve added vertical lines to this ridge plot to indicate 1,
+5, 10, 15, and 20 year sentences.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">y =</span> criminal_history, <span class="at">x =</span> sentence_length,</span>
+<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a>                    <span class="at">fill =</span> criminal_history)) <span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb39-4"><a href="#cb39-4" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">60</span>, <span class="dv">120</span>, <span class="dv">180</span>, <span class="dv">240</span>), </span>
+<span id="cb39-5"><a href="#cb39-5" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, </span>
+<span id="cb39-6"><a href="#cb39-6" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb39-7"><a href="#cb39-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Distribution of Sentence Length by Criminal History Level&quot;</span>,</span>
+<span id="cb39-8"><a href="#cb39-8" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">&quot;Black dashed lines indicate 1, 5, 10, 15, and 20 year sentences&quot;</span>,</span>
+<span id="cb39-9"><a href="#cb39-9" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">&quot;Criminal History Level&quot;</span>,</span>
+<span id="cb39-10"><a href="#cb39-10" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Sentence Length (Months)&quot;</span>,</span>
+<span id="cb39-11"><a href="#cb39-11" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Criminal History&quot;</span>) <span class="sc">+</span></span>
+<span id="cb39-12"><a href="#cb39-12" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>()</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/sentence%20by%20criminal%20history%20ridge%20plot-1.png" width="576" /></p>
+</div>
+<div id="violin-plot" class="section level5">
+<h5>Violin plot</h5>
+<p>Violin plots are another type of density plot where the width of each
+“violin” changes with the density of the data: the wider the section of
+the violin, the more data around that value. For example, at the first
+criminal history level, it looks like short sentences are the most
+frequent (widest part of the violin) and it is very unusual for
+individuals to have sentences longer than about 125 months (plot is very
+narrow and needle-like around that point and higher).</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> criminal_history, <span class="at">y =</span> sentence_length,</span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>                    <span class="at">fill =</span> criminal_history)) <span class="sc">+</span></span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;Sentence Length (Months)&quot;</span>, </span>
+<span id="cb40-5"><a href="#cb40-5" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Criminal History Level&quot;</span>,</span>
+<span id="cb40-6"><a href="#cb40-6" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Distribution of Sentence Length by Criminal History Level&quot;</span>)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/sentence%20by%20criminal%20history%20violin%20plot-1.png" width="576" /></p>
+</div>
+</div>
+<div
+id="how-does-sentence-length-vary-by-adjusted-offense-level-and-criminal-history"
+class="section level4">
+<h4>How does sentence length vary by adjusted offense level and criminal
+history?</h4>
+<p>Let’s add a third variable to our exploration of sentence length: the
+adjusted offense level (<code>all_adjustments</code>). Recall that
+<code>all_adjustments</code> is a type of rating of the offense level
+that can be treated numerically, so we might start by looking at a
+scatterplot of sentence length by offense level, and then add in the
+criminal history level through color.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">y =</span> sentence_length, <span class="at">x =</span> all_adjustments, </span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>                    <span class="at">color =</span> criminal_history)) <span class="sc">+</span></span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Adjusted Offense Level&quot;</span>,</span>
+<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Sentence Length (Months)&quot;</span>,</span>
+<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Sentence Length by Adjusted Offense Level and Criminal History&quot;</span>,</span>
+<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Criminal History&quot;</span>) <span class="sc">+</span></span>
+<span id="cb41-8"><a href="#cb41-8" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>()</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/scatterplot%20sentence%20offense%20level%20criminal%20history-1.png" width="576" /></p>
+<p>We can display a lot of information in a single plot! Let’s try going
+a step further, and adding the <code>race</code> variable into the mix.
+We can do so by using the same code as the previous plot, but also using
+the <code>facet_wrap()</code> function with <code>race</code> to create
+four different plots according to race.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">y =</span> sentence_length, <span class="at">x =</span> all_adjustments, </span>
+<span id="cb42-2"><a href="#cb42-2" tabindex="-1"></a>                    <span class="at">color =</span> criminal_history)) <span class="sc">+</span></span>
+<span id="cb42-3"><a href="#cb42-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Adjusted Offense Level&quot;</span>,</span>
+<span id="cb42-5"><a href="#cb42-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Sentence Length (Months)&quot;</span>,</span>
+<span id="cb42-6"><a href="#cb42-6" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Sentence Length by Adjusted Offense Level, Criminal History, and Race&quot;</span>,</span>
+<span id="cb42-7"><a href="#cb42-7" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Criminal History&quot;</span>) <span class="sc">+</span></span>
+<span id="cb42-8"><a href="#cb42-8" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb42-9"><a href="#cb42-9" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>race)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/scatterplot%20sentence%20offense%20level%20criminal%20history%20race-1.png" width="672" /></p>
+<p>Now we have four different variables represented in a single plot,
+which is a super powerful tool. What do you notice about the plots
+above?</p>
+<!-- ### How does the age range vary with criminal history? -->
+</div>
+</div>
+<div id="when" class="section level3">
+<h3>When?</h3>
+<p>Earlier we identified <code>year</code> as our only variable
+capturing the <em>when</em>, and from the background information we know
+we have records spanning from 2006 to 2020. It is worth noticing that
+although <span class="math inline">\(2020 - 2006 = 14\)</span>, when we
+count each year as a whole year of data <em>inclusively</em>, we have up
+to 15 distinct possible years of data available. Let’s see which
+specific years of data we have available by using
+<code>distinct()</code> again.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>us_sent <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a>  <span class="fu">distinct</span>(year)</span></code></pre></div>
+<pre><code>## # A tibble: 15 × 1
+##    year 
+##    &lt;fct&gt;
+##  1 2006 
+##  2 2007 
+##  3 2008 
+##  4 2009 
+##  5 2010 
+##  6 2011 
+##  7 2012 
+##  8 2013 
+##  9 2014 
+## 10 2015 
+## 11 2016 
+## 12 2017 
+## 13 2018 
+## 14 2019 
+## 15 2020</code></pre>
+<p>Now let’s create a graph to see how the number of cases we have
+varies by year. We’ll place each year on the vertical (<code>y</code>)
+axis and the sentences on the horizontal (<code>x</code>) axis.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">y =</span> year)) <span class="sc">+</span></span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Sentences per Year&quot;</span>,</span>
+<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Count&quot;</span>,</span>
+<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Year&quot;</span>)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/bar%20graph%20sentences%20per%20year-1.png" width="576" /></p>
+<p>Let’s explore how sentence length varies by each year in our data
+set. We can do this by using side-by-side boxplots again.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> sentence_length)) <span class="sc">+</span> </span>
+<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Distribution of Sentence Length by Year&quot;</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Sentence Length&quot;</span>,</span>
+<span id="cb46-5"><a href="#cb46-5" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Year&quot;</span>)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/boxplot%20sentences%20per%20year-1.png" width="576" /></p>
+<!-- could include more information on interpreting boxplots, explaining what outliers are, etc. would likely write about this above where we first introduce boxplots. We could also consider adding in information about examining center, spread, etc. -->
+</div>
+<div id="where" class="section level3 tabset">
+<h3 class="tabset">Where?</h3>
+<p>Now that we’ve explored the <em>who</em>, <em>what</em>, and
+<em>when</em> questions about our data, let’s finish off our EDA by
+understanding the <em>where</em> question. Let’s check what districts we
+have in the data. We can do this using <code>distinct()</code>
+again.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>us_sent <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a>  <span class="fu">distinct</span>(district)</span></code></pre></div>
+<pre><code>## # A tibble: 93 × 1
+##    district        
+##    &lt;chr&gt;           
+##  1 Dist of Columbia
+##  2 Maine           
+##  3 Massachusetts   
+##  4 New Hampshire   
+##  5 Puerto Rico     
+##  6 Rhode Island    
+##  7 Connecticut     
+##  8 New York East   
+##  9 New York North  
+## 10 New York South  
+## # ℹ 83 more rows</code></pre>
+<p>You’ll notice that certain states are a single district on their own,
+while other larger states are split into several districts (e.g. New
+York East, New York North).</p>
+<p>If you live in the United States, do you know which district you live
+in?</p>
+<p>If not, you can look it up at <a
+href="https://www.uscourts.gov/federal-court-finder/search">the United
+States Department of Justice’s website</a>.</p>
+<p>Apart from using the <code>distinct()</code> command to figure out
+what districts we have in our data set, we are interested in finding out
+how many sentences were made in each district. We will also want to
+think about this question in relation to the population of those
+districts, which can be quite nuanced—we will come back to this
+later.</p>
+<p>Our goals in this next section are to think about ways we can explore
+the question <em>“Where did those sentences occur?”</em> in a visual
+way.</p>
+<!--
+Note from original authors: **Learning aims**
+
+- introduce factors as a data type (accomplished above)
+- explain why it might be better to put our names on the y axis instead of the x-axis for many categories and those with longer names. This makes it more readable.
+- explain that automatically categorical data will be placed in alphabetical order.
+- we can reconfigure the graph using functions from the `forcats` package.
+- This is a good example for when you might want to order it in terms of frequency (i.e. the count) using `fct_infreq`
+- We may also want to reverse the order to see the districts which have the most sentences at the top of our plot using `fct_rev`. 
+-->
+<p>Let’s start looking at the number of individual sentences across
+districts by using a bar graph.</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">x =</span> district)) <span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/bar%20graph%20districts-1.png" width="576" /></p>
+<p>We can see immediately that, given the large number of districts, a
+simple bar graph makes it super hard to interpret the data. Let’s step
+through some ways we can improve this plot.</p>
+<div id="place-district-on-the-y-axis" class="section level4">
+<h4>1. Place district on the <span
+class="math inline">\(y\)</span>-axis</h4>
+<p>First, we can change our plot so that <code>district</code> is on the
+<span class="math inline">\(y\)</span>-axis so there is more room for
+the text. Let’s not worry about presenting accurate axis labels or
+titles until we get our plot into a readable format:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">y =</span> district)) <span class="sc">+</span></span>
+<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/horizontal%20bar%20graph%20districts-1.png" width="480" /></p>
+<p>That definitely makes it easier to read the district names! However,
+we can think about ordering the districts in such a way that is useful
+for us. For example, we might be interested in seeing the districts with
+the most amount of sentences.</p>
+</div>
+<div id="sort-district-by-frequency" class="section level4">
+<h4>2. Sort district by frequency</h4>
+<p>To answer this question, we can use <code>fct_infreq()</code>, as we
+did earlier in our EDA, to order the districts from the least to the
+most number of sentences.</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_infreq</span>(district))) <span class="sc">+</span></span>
+<span id="cb51-2"><a href="#cb51-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/bar%20graph%20district%20sorted-1.png" width="480" /></p>
+</div>
+<div id="reverse-the-order-of-the-districts" class="section level4">
+<h4>3. Reverse the order of the districts</h4>
+<p>Alternatively, we can order the districts from the most to the least
+amount of sentences in our data set by using <code>fct_rev()</code> in
+conjunction with <code>fct_infreq()</code>.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_rev</span>(<span class="fu">fct_infreq</span>(district)))) <span class="sc">+</span></span>
+<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/bar%20graph%20district%20reverse%20sorted-1.png" width="480" /></p>
+</div>
+<div id="add-title-and-axes-labels" class="section level4">
+<h4>4. Add title and axes labels</h4>
+<p>Now that we have our plot data organized in a readable and useful
+way, let’s add useful title and axis titles. When we have longer titles,
+you can use <code>\n</code> to add a line break.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a><span class="fu">ggplot</span>(us_sent, <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fct_rev</span>(<span class="fu">fct_infreq</span>(district)))) <span class="sc">+</span></span>
+<span id="cb53-2"><a href="#cb53-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">&quot;forestgreen&quot;</span>) <span class="sc">+</span></span>
+<span id="cb53-3"><a href="#cb53-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Number of Individuals Sentenced at </span><span class="sc">\n</span><span class="st">the Federal District Court Level&quot;</span>,</span>
+<span id="cb53-4"><a href="#cb53-4" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Federal District Court&quot;</span>,</span>
+<span id="cb53-5"><a href="#cb53-5" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Number of individuals&quot;</span>)</span></code></pre></div>
+<p><img src="sentencing-eda_files/figure-html/final%20district%20bar%20graph-1.png" width="480" /></p>
+<!--##### Exploring the census data
+
+**To Do**:
+
+- If we want to get out the district populations, we will probably need to download the data by the county level.
+- Decision points: we could download the data in categories by age and sex and race: e.g. 5-9, 10-14 etc. This might get a little -->
+</div>
+</div>
+</div>
+<div id="next-steps" class="section level2">
+<h2>Next steps</h2>
+<p>Now that we’ve properly conducted an EDA of our federal sentencing
+data and have an understanding of the context and the structure of the
+data, we can dive into analyzing this data further!</p>
+<!-- Save sentencing data to carry forward -->
+<!-- Add previous/next buttons to bottom of page -->
+<ul class="pager">
+<!--this is the style of the button-->
+<li>
+<a href="background.html">Back to Background</a>
+</li>
+<!--This button takes me to the table of contents-->
+<li>
+<a href="analysis.html">Next: Regression Analysis</a>
+</li>
+<!--This button takes me to the previous page-->
+</ul>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

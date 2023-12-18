@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Regression Analysis</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Federal District Courts and Race-Based Criminal Sentencing Disparities</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="background.html">Background</a>
+</li>
+<li>
+  <a href="sentencing-eda.html">Exploratory Data Analysis</a>
+</li>
+<li>
+  <a href="analysis.html">Regression Analysis</a>
+</li>
+<li>
+  <a href="results.html">Additional Results</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Regression Analysis</h1>
+
+</div>
+
+
+<!-- Load required code us_sent object -->
+<p>One main way that we analyze data is through fitting regressions.
+Regressions can be used to model the relationships between different
+explanatory variables and a chosen response variable. There are many
+kinds of regressions, but the most common and simplest regression is a
+simple linear regression. To explore linear regression, let’s first take
+a step back from the federal sentencing data, and turn to two simpler
+data sets for examples.</p>
+<div id="fitting-a-line-the-basics" class="section level2">
+<h2>Fitting a line: The basics</h2>
+<p>Suppose we want to predict how much electricity the city of Los
+Angeles, California will use based on the daily temperature. As the
+temperature goes higher, more people will turn on their air conditioners
+and use more electricity. We can look at past electricity use data and
+compare it to the temperature each day to get a sense of how these two
+attributes are related. Knowing and understanding how two variables
+relate can help you plan for future possibilities or identify and
+correct patterns that you don’t want to continue. For example, we can
+use this relationship to makes predictions of how much electricity Los
+Angeles will use in the future if we know the future temperature, and
+make sure that there is enough for the city’s needs.</p>
+<p>Let’s make two example points, point A at (1,2) and point B at (3,5).
+In R, we will save these points in a data frame using a vector of the x
+values, 1 and 3, and a vector of the matching y values, 2 and 5.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>twopoints <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">xvals =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), </span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                        <span class="at">yvals =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>), </span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                        <span class="at">label =</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">head</span>(twopoints)</span></code></pre></div>
+<pre><code>##   xvals yvals label
+## 1     1     2     A
+## 2     3     5     B</code></pre>
+<p>We can make a fairly simple plot of these two points, using
+<code>geom_point()</code> as we did in our EDA, and
+<code>geom_text()</code> to label our points.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>twoplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(twopoints, <span class="fu">aes</span>(<span class="at">x =</span> xvals, <span class="at">y =</span> yvals)) <span class="sc">+</span> </span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label), <span class="at">nudge_y =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, <span class="dv">6</span>) <span class="sc">+</span> </span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">6</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>twoplot</span></code></pre></div>
+<p><img src="analysis_files/figure-html/twopoints-1.png" width="384" /></p>
+<div id="analytically-fit-a-line-to-two-points" class="section level3">
+<h3>Analytically fit a line to two points</h3>
+<p>In order to create a linear regression on these two points, we can
+think back to algebra and use the formula for a line.</p>
+<p><span class="math display">\[
+y = m x + b
+\]</span></p>
+<p>Fitting our line to the data is straightforward and can be done in a
+number of ways. One way is that we can plug both points into the
+equation of the line and then solve the system together.</p>
+<p><span class="math display">\[
+\begin{aligned}
+2 &amp;= (1)m + b\\
+5 &amp;= (3)m + b
+\end{aligned}
+\]</span></p>
+<p>Here we have a system that has two equations and two unknowns (<span
+class="math inline">\(m\)</span> and <span
+class="math inline">\(b\)</span>), so we know this system has a unique
+solution! We can solve this system using a variety of techniques—try to
+solve this system using a technique you are comfortable with and verify
+that the solution below passes through each of the two points.</p>
+<p><span class="math display">\[
+y = \frac{3}{2} x + \frac{1}{2}
+\]</span></p>
+<p>Next we can plot the results. Here we use the
+<code>geom_abline()</code> function, to plot our linear equation which
+can be done by inputting the values for the slope and the intercept.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>twoplot <span class="sc">+</span> </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">2</span>, </span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>              <span class="at">intercept =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>)</span></code></pre></div>
+<p><img src="analysis_files/figure-html/twopoints%20lm-1.png" width="384" /></p>
+<p>Great! Notice that the line above goes right through our two data
+points.</p>
+</div>
+<div id="numerically-fit-a-line-to-two-points" class="section level3">
+<h3>Numerically fit a line to two points</h3>
+<p>If we want to reduce the amount of calculations required to fit a
+line to two points, we can instead just rely on R to do the work for us.
+We can use the linear model function <code>lm()</code> to carry out a
+regression for us. We just input our <code>yvals</code> and
+<code>xvals</code> along with our data <code>twopoints</code> to fit a
+linear model using R.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>two_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(yvals <span class="sc">~</span> xvals, <span class="at">data =</span> twopoints)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>two_lm</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = yvals ~ xvals, data = twopoints)
+## 
+## Coefficients:
+## (Intercept)        xvals  
+##         0.5          1.5</code></pre>
+</div>
+<div id="analytically-fit-a-line-to-three-points"
+class="section level3">
+<h3>Analytically fit a line to three points</h3>
+<p>We know that two points alone uniquely define a line, but what do we
+think will happen if we have to find a line that goes through three data
+points? Let’s add the point <span class="math inline">\((2, 3)\)</span>
+to our existing set and see what happens when try to draw a line through
+all three points. Below, we will use R to plot the three points and make
+multiple attempts to fit a line. Don’t worry too much on the coding for
+now, but pay attention to the resulting plots.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>threepoints <span class="ot">&lt;-</span> </span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  twopoints <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="co"># Add third point to dataset</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">add_row</span>(<span class="at">xvals =</span> <span class="dv">2</span>, <span class="at">yvals =</span> <span class="dv">3</span>, <span class="at">label =</span> <span class="st">&quot;C&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="co"># Generate y values for guesses of regression lines </span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">yfit1 =</span> xvals <span class="sc">*</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>         <span class="at">yfit2 =</span> xvals <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>         <span class="at">yfit3 =</span> xvals <span class="sc">*</span> <span class="dv">2</span> <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co"># Plot data points with lines</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>threeplot <span class="ot">&lt;-</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="fu">ggplot</span>(threepoints, <span class="fu">aes</span>(<span class="at">x =</span> xvals, <span class="at">y =</span> yvals)) <span class="sc">+</span> </span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>)  <span class="sc">+</span> </span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label), </span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>            <span class="at">nudge_y =</span> <span class="fl">0.3</span>, </span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>            <span class="at">check_overlap =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>,<span class="dv">6</span>) <span class="sc">+</span> </span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">6</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co"># Display plots</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="fu">grid.arrange</span>(</span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>  threeplot <span class="sc">+</span> </span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>    <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">2</span>, <span class="at">intercept =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">xend =</span> xvals, </span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a>                     <span class="at">yend =</span> yfit1), </span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>),</span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>  threeplot <span class="sc">+</span> </span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a>    <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">xend =</span> xvals, </span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a>                     <span class="at">yend =</span> yfit2), </span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>),</span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a>  threeplot <span class="sc">+</span> </span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a>    <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">2</span>, <span class="at">intercept =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span>  </span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">xend =</span> xvals, </span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a>                     <span class="at">yend =</span> yfit3), </span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">&quot;coral2&quot;</span>),</span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">3</span>)</span></code></pre></div>
+<p><img src="analysis_files/figure-html/threepoints%20line%20guesses-1.png" width="1152" /></p>
+<p>Notice in all three graphs above, we can’t draw a straight line
+through all three points at the same time. The best that we can do is
+try to find a line that gets very close to all three points, or fits
+these three points <em>the best</em>. But how can we define “the best”
+line that fits this data?</p>
+<p>To understand which line <em>best fits</em> our three data points, we
+need to talk about the <strong>error</strong>, which is also called the
+<strong>residual</strong> in statistics. The residual is the vertical
+distance between the predicted data point <span
+class="math inline">\(\hat{y}\)</span> (on the line) and the actual
+value of <span class="math inline">\(y\)</span> our data takes on at
+that point (the value we collected). In our data set we have the points
+<span class="math inline">\((1, 2)\)</span>, <span
+class="math inline">\((2, 3)\)</span>, and <span
+class="math inline">\((3, 5)\)</span> so the only actual values for
+<span class="math inline">\(y\)</span> in our data set are 2, 3, and 5
+even though our predicted line, or <em>linear model</em>, takes on all
+values of <span class="math inline">\(y\)</span> between 0 and 6.</p>
+</div>
+<div id="numerically-fit-a-line-to-three-points" class="section level3">
+<h3>Numerically fit a line to three points</h3>
+<p>To find the model that best fits our data, we want to make the total
+error as small as possible. To expand on our definition of linear
+regression above, linear regression is a technique that allows us to
+identify the line that minimizes our error. This line is called a
+<em>linear regression model</em> and is the line that best fits our
+data. Below, we use <code>lm()</code> again to fit our linear model to
+the three data points.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>three_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(yvals <span class="sc">~</span> xvals, <span class="at">data =</span> threepoints)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>three_lm</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = yvals ~ xvals, data = threepoints)
+## 
+## Coefficients:
+## (Intercept)        xvals  
+##      0.3333       1.5000</code></pre>
+<p>Here R gives us the slope and intercept of the straight line that
+best fits our data. Let’s graph this line together with our data using
+the code below.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Add predicted values (yhat) to data</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>threepoints <span class="ot">&lt;-</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  threepoints <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">yhat =</span> <span class="fl">1.5</span> <span class="sc">*</span> xvals <span class="sc">+</span> <span class="fl">0.3333</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="fu">ggplot</span>(threepoints, <span class="fu">aes</span>(<span class="at">x =</span> xvals, <span class="at">y =</span> yvals)) <span class="sc">+</span> </span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>)  <span class="sc">+</span> </span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> label), </span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>            <span class="at">nudge_y =</span> <span class="sc">-</span><span class="fl">0.4</span> ) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, <span class="dv">6</span>) <span class="sc">+</span> </span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">6</span>) <span class="sc">+</span> </span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="fl">1.5</span>, <span class="at">intercept =</span> <span class="fl">0.3333</span>) <span class="sc">+</span> </span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">xend =</span> xvals, </span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>                   <span class="at">yend =</span> yhat), </span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>)</span></code></pre></div>
+<p><img src="analysis_files/figure-html/three%20points%20lm-1.png" width="384" /></p>
+<p>Notice that the best fit linear model doesn’t go through any of our
+three points! <strong>Why do you think that is?</strong></p>
+<p>Keep in mind, our goal is to minimize our error as much as we can. In
+each of the four previous graphs, the error (or the distance between the
+predicted y value and the actual y value) is shown on the graph,
+highlighted in the coral color. Of the four plots we just made of lines
+through our three data points, which one seems to have the smallest
+error?</p>
+<blockquote>
+<p>Note: Whenever you employ linear regression, there are various
+conditions you must make sure are satisfied before proceeding. You can
+use the acronym L.I.N.E to remember that your residuals must satisfy
+<strong>L</strong>inearity, <strong>I</strong>ndependence,
+<strong>N</strong>ormality, and <strong>E</strong>qual variance
+conditions. For the purposes of this tutorial, we won’t go in depth
+about what these conditions mean and how you can check these conditions,
+but make sure to keep them in mind for your future data analyses.
+Conditions are super important in statistical analysis!</p>
+</blockquote>
+</div>
+</div>
+<div id="introduction-to-linear-regression" class="section level2">
+<h2>Introduction to linear regression</h2>
+<p>Now let’s turn to another example data set to explore linear
+regression further. This new data set focuses on penguins. Do you think
+a linear model might be a good way to model the data? Run the code below
+load the new dataset and create a scatterplot showing the relationship
+between flipper length and body mass among penguins.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">data</span>(penguins)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>pengplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> body_mass_g, <span class="at">y =</span> flipper_length_mm)) <span class="sc">+</span> </span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Body Mass (grams)&quot;</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Flipper Length (mm)&quot;</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Flipper Length by Body Mass of Penguins&quot;</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>pengplot</span></code></pre></div>
+<p><img src="analysis_files/figure-html/penguin%20scatterplot-1.png" width="480" /></p>
+<p>Take a look at the scatterplot: does it look like most of the data
+fall along a straight line? If the general shape is a line, then yes, we
+could try to model this data with linear regression.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>pengfit <span class="ot">&lt;-</span> <span class="fu">lm</span>(flipper_length_mm <span class="sc">~</span> body_mass_g, <span class="at">data =</span> penguins)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>pengfit</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = flipper_length_mm ~ body_mass_g, data = penguins)
+## 
+## Coefficients:
+## (Intercept)  body_mass_g  
+##   136.72956      0.01528</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>pengplot <span class="sc">+</span> </span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="fl">0.0152</span>, </span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>              <span class="at">intercept =</span> <span class="fl">137.0396</span>)</span></code></pre></div>
+<p><img src="analysis_files/figure-html/penguins%20lm-1.png" width="384" /></p>
+<div id="summarizing-a-linear-regression-model" class="section level3">
+<h3>Summarizing a linear regression model</h3>
+<p>After we fit a linear regression model, we are often interested in
+summarizing the model and assessing how good the model fits the data.
+One function we can use for this is <code>summary()</code>. This
+function provides an overview of the fitted model.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">summary</span>(pengfit)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = flipper_length_mm ~ body_mass_g, data = penguins)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -23.7626  -4.9138   0.9891   5.1166  16.6392 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 1.367e+02  1.997e+00   68.47   &lt;2e-16 ***
+## body_mass_g 1.528e-02  4.668e-04   32.72   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 6.913 on 340 degrees of freedom
+##   (2 observations deleted due to missingness)
+## Multiple R-squared:  0.759,  Adjusted R-squared:  0.7583 
+## F-statistic:  1071 on 1 and 340 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>There is a lot of information that comes out of this function, but
+for now we will focus on the coefficients and the <span
+class="math inline">\(R^2\)</span> value.</p>
+<div id="interpreting-coefficients-for-numerical-predictors"
+class="section level4">
+<h4>Interpreting coefficients for numerical predictors</h4>
+<p>In the middle of the summary output, the estimated coefficients are
+provided in the first column of the table. The intercept is <span
+class="math inline">\(b = 136.7\)</span> and the slope is <span
+class="math inline">\(m = 0.015\)</span>.</p>
+<p>While the <strong>intercept</strong> typically represents the average
+outcome when all predictors are 0, it doesn’t make sense in this case to
+talk about a penguin with a mass of 0 grams (impossible!), so we will
+not interpret the intercept.</p>
+<p>The <strong>slope</strong> represents the change in the average
+outcome for a one unit increase in the value of the predictor. In this
+case, we would say that a one-gram increase in the mass of a penguin is
+associated with 0.015 mm longer flipper, <em>on average</em>.</p>
+</div>
+<div id="assessing-model-fit-with-r2" class="section level4">
+<h4>Assessing model fit with <span
+class="math inline">\(R^2\)</span></h4>
+<p>Now focus on the bottom of the summary output and find the “Multiple
+R-squared” value. You probably found <span class="math inline">\(R^2 =
+0.759\)</span> from the table.</p>
+<p><span class="math inline">\(R^2\)</span> represents the proportion of
+variation in the response variable that is explained by the explanatory
+variable(s) in your linear model. In our case, we found that 75.9% of
+the variation in flipper length can be explained by the body mass of
+penguins. That is a pretty high <span
+class="math inline">\(R^2\)</span>, especially for observational data!
+Therefore, we can already consider this model to be quite good for
+modeling flipper length.</p>
+<!--
+Apart from looking at the $R^2$, it is a good idea to look at the resulting $t$-tests and $F$-tests. While t-tests looks at the significance of individual variables by comparing population means, F-tests examine the significance of overall models by comparing population variances. You can see the "t value" column for the test statistics from the t-tests, but you can mainly just focus on the resulting p-values in the "Pr(>|t|)" column. In this case, the p-value for `body_mass_g` is quite low, meaning it is a significant variable in this model predicting flipper length. At the bottom, you can see the F-statistic and associated p-value for the overall model. Again, the p-value is quite low, meaning the model is significant. These two outcomes of the t-test and F-test can increase our confidence in the model even further. 
+-->
+</div>
+</div>
+<div id="linear-regression-with-a-categorical-predictor"
+class="section level3">
+<h3>Linear regression with a categorical predictor</h3>
+<p>So far we’ve only explored linear regression with numerical
+variables, but we can certainly use categorical variables in our model
+as well. Continuing with our penguins data, let’s compare flipper length
+to penguin species. Remember that flipper length is a numerical variable
+and species is a categorical variable with three levels: Adelie,
+Chinstrap, and Gentoo.</p>
+<div id="binary-categorical-predictor" class="section level4">
+<h4>Binary categorical predictor</h4>
+<p>To start, let’s simplify the problem by considering species as only
+“Gentoo” or “Not Gentoo”. We’ll use <code>case_when()</code> to create
+this new binary variable (<code>species2</code>), then we’ll create a
+side-by-side boxplot using <code>geom_boxplot()</code> to view the
+relationship between flipper length and species.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>penguins <span class="ot">&lt;-</span> </span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  penguins <span class="sc">%&gt;%</span> </span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">species2 =</span> <span class="fu">fct_collapse</span>(species,</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>                               <span class="st">&quot;Not Gentoo&quot;</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;Adelie&quot;</span>, <span class="st">&quot;Chinstrap&quot;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>adelieplot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(penguins, <span class="fu">aes</span>(<span class="at">x =</span> species2, <span class="at">y =</span> flipper_length_mm)) <span class="sc">+</span> </span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">color =</span> <span class="st">&quot;coral2&quot;</span>, </span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>               <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Species&quot;</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Flipper Length (mm)&quot;</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">&quot;Flipper Length by Gentoo and non-Gentoo Species&quot;</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>adelieplot</span></code></pre></div>
+<p><img src="analysis_files/figure-html/unnamed-chunk-6-1.png" width="384" /></p>
+<p>We can see that Gentoo penguins seem to have a longer flipper
+lengths, generally, than non-Gentoo penguins.</p>
+<p>Next, we create a linear model for the same relationship.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>gentoo_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(flipper_length_mm <span class="sc">~</span> species2, <span class="at">data =</span> penguins)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">summary</span>(gentoo_lm)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = flipper_length_mm ~ species2, data = penguins)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -19.9206  -4.9206  -0.9206   4.0794  20.0794 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    191.9206     0.4784  401.18   &lt;2e-16 ***
+## species2Gentoo  25.3147     0.8003   31.63   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 6.998 on 331 degrees of freedom
+## Multiple R-squared:  0.7514, Adjusted R-squared:  0.7507 
+## F-statistic:  1001 on 1 and 331 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p><span class="math inline">\(R^2\)</span> in this case is interpreted
+in the same way. Find the <span class="math inline">\(R^2\)</span> value
+for this model. Is it a good fit?</p>
+<p>Yes, we see that <span class="math inline">\(R^2 = 0.7514\)</span>,
+which means that about 75% of the variability in flipper length is
+explained by whether or not the penguins are Gentoo penguins.</p>
+<p>How do you think we interpret this model now? You may have noticed
+that the predictor variable shows up a little differently than you might
+expect in the coefficient table: it’s labeled
+<code>species2Gentoo</code> rather than just <code>species2</code>. This
+is actually a new <strong>indicator variable</strong> that R created to
+fit the linear model! Because a linear model is a mathematical equation,
+R converts our categorical variable into a numerical <em>indicator
+variable</em>: it takes on the value 1 if the specified level after the
+variable name is observed, and 0 otherwise. Our binary species variable
+<code>species2</code> was converted to an indicator variable labeled
+<code>species2Gentoo</code>, which tells us:</p>
+<p><span class="math display">\[
+\texttt{species2Gentoo} = \begin{cases}
+  1 &amp; \text{if the species is Gentoo}\\
+  0 &amp; \text{if the species is not Gentoo}
+\end{cases}
+\]</span></p>
+<p>(Note: the indicator variable would be reversed if it were instead
+labeled as <code>species2Not Gentoo</code> in the summary output.)</p>
+<p>So how do we interpret the coefficients in this model? Let’s write
+out the equation of the regression line to figure it out:</p>
+<p><span class="math inline">\(\widehat{\text{Flipper Length}} = 191.9 +
+25.3 (\text{Gentoo})\)</span></p>
+<p>“Gentoo” in the equation above is our indicator variable
+<code>species2Gentoo</code>. If we plug in a 0 for the “Gentoo”
+indicator variable in the equation to get the predicted average flipper
+length for <em>non-Gentoo</em> species (our <em>reference</em> level),
+we have:</p>
+<p><span class="math inline">\(\widehat{\text{Flipper Length}} = 191.9 +
+25.3 (0) = 191.9 \text{ mm}\)</span></p>
+<p>Notice the predicted average here is exactly the intercept! This
+tells us that the <strong>intercept</strong> can be interpreted as the
+average outcome for the reference level of a categorical variable
+(whichever level takes on the value “0”).</p>
+<p>If we plug in a 1 for “Gentoo” in the equation to get the predicted
+average flipper length for Gentoo species, we have:</p>
+<p><span class="math inline">\(\widehat{\text{Flipper Length}} = 191.9 +
+25.3 (1) = 217.2 \text{ mm}\)</span></p>
+<p>Notice the difference in these two predicted averages is exactly the
+slope: <span class="math inline">\(217.2 - 191.9 = 25.3\)</span>! This
+tells us that the <strong>slope</strong> can be interpreted as the
+difference in the average outcome between the indicated level and the
+reference level. In our case, the flipper length of Gentoo species is,
+on average, 25.3 mm longer than the flipper length of non-Gentoo
+species.</p>
+</div>
+<div id="categorical-predictor-with-more-than-2-levels"
+class="section level4">
+<h4>Categorical predictor with more than 2 levels</h4>
+<p>Now let’s return to the original <code>species</code> variable with
+three levels. Let’s see what happens when we fit the model with this
+variable.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>species_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(flipper_length_mm <span class="sc">~</span> species, <span class="at">data =</span> penguins)</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="fu">summary</span>(species_lm)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = flipper_length_mm ~ species, data = penguins)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -18.1027  -4.8235  -0.1027   4.7647  19.8973 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      190.1027     0.5522  344.25  &lt; 2e-16 ***
+## speciesChinstrap   5.7208     0.9796    5.84 1.25e-08 ***
+## speciesGentoo     27.1326     0.8241   32.92  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 6.673 on 330 degrees of freedom
+## Multiple R-squared:  0.7747, Adjusted R-squared:  0.7734 
+## F-statistic: 567.4 on 2 and 330 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>What do you notice? What do you think has happened?</p>
+<p>You should see that instead of a single predictor
+<code>species</code> in the coefficient table, we have two new indicator
+variables, <code>speciesChinstrap</code> and <code>speciesGentoo</code>.
+But we know that <code>species</code> has three levels! Where did the
+Adelie penguins go? Let’s think through the math again. For each
+indicator variable we have:</p>
+<p><span class="math display">\[
+\texttt{speciesChinstrap} = \begin{cases}
+  1 &amp; \text{if the species is Chinstrap}\\
+  0 &amp; \text{if the species is not Chinstrap}
+\end{cases}
+\]</span> and <span class="math display">\[
+\texttt{speciesGentoo} = \begin{cases}
+  1 &amp; \text{if the species is Gentoo}\\
+  0 &amp; \text{if the species is not Gentoo}
+\end{cases}
+\]</span></p>
+<p>Well, if a species is <em>not</em> Chinstrap
+(<code>speciesChinstrap</code> = 0) <em>nor</em> Gentoo
+(<code>speciesGentoo</code> = 0), then it must be whatever species is
+left: Adelie! In other words, the Adelie penguins have now become our
+<strong>reference</strong> level of the species variable: the baseline
+level against which every other species is compared. We can make
+predictions for Adelie penguins by plugging in 0s for all the indicator
+variables. Let’s see this in action!</p>
+<p>The equation of the fitted regression line is now:</p>
+<p><span class="math inline">\(\widehat{\text{Flipper Length}} = 190.1 +
+5.7 (\text{Chinstrap}) + 27.1 (\text{Gentoo})\)</span></p>
+<p>First, let’s find the predicted average flipper length for <em>Adelie
+penguins</em> by plugging in 0s for each indicator variable:</p>
+<p><span class="math inline">\(\widehat{\text{Flipper Length}} = 190.1 +
+5.7 (0) + 27.1 (0) = 190.1 \text{ mm}\)</span></p>
+<p>Next, let’s find the predicted average flipper length for
+<em>Chinstrap penguins</em> by plugging in 1 for “Chinstrap” and 0 for
+“Gentoo”:</p>
+<p><span class="math inline">\(\widehat{\text{Flipper Length}} = 190.1 +
+5.7 (1) + 27.1 (0) = 195.8 \text{ mm}\)</span></p>
+<p>Finally, let’s find the predicted average flipper length for
+<em>Gentoo penguins</em> by plugging in 0 for “Chinstrap” and 1 for
+“Gentoo”:</p>
+<p><span class="math inline">\(\widehat{\text{Flipper Length}} = 190.1 +
+5.7 (0) + 27.1 (1) = 217.2 \text{ mm}\)</span></p>
+<p>Using these predicted average values, we can make the following
+connections:</p>
+<ul>
+<li>The <strong>intercept</strong> captures the average outcome for the
+<em>reference level</em> of the categorical variable.</li>
+<li>The <strong>slope</strong> of each indicator variable captures the
+difference in the average outcome between the indicated level and the
+reference level.
+<ul>
+<li>For example, if we take the predicted average flipper length of
+Chinstrap penguins (195.8 mm) and subtract the predicted average flipper
+length of Adelie penguins (190.1 mm), we get the slope for
+<code>speciesChinstrap</code> (5.7).</li>
+<li>In other words, we could interpret the Chinstrap indicator variable
+coefficient as: “The flipper length of Chinstraps species is, on
+average, 5.7 mm longer than the flipper length of Adelie species.”</li>
+</ul></li>
+<li>The difference in slopes between two indicator variables will
+provide the average difference in the outcome between those two levels.
+<ul>
+<li>For example, if we take the predicted average flipper length of
+Gentoo penguins (217.2 mm) and subtract the predicted average flipper
+length of Chinstrap penguins (195.8 mm), we get 21.4. This is the same
+as taking the difference in the two corresponding slopes: <span
+class="math inline">\(27.1 - 5.7 = 21.4\)</span>.</li>
+</ul></li>
+</ul>
+<p>These <em>pairwise comparisons</em> or <em>contrasts</em> of average
+flipper length across all three species can be done more quickly in R
+using the <code>emmeans()</code> function of the
+<strong>emmeans</strong> package, as shown below. To use this function,
+you need to provide only the name of the fitted linear model
+(<code>species_lm</code>) and which variable contains the levels you
+want to compare (<code>species</code>).</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">emmeans</span>(species_lm, pairwise <span class="sc">~</span> species)<span class="sc">$</span>contrasts</span></code></pre></div>
+<pre><code>##  contrast           estimate    SE  df t.ratio p.value
+##  Adelie - Chinstrap    -5.72 0.980 330  -5.840  &lt;.0001
+##  Adelie - Gentoo      -27.13 0.824 330 -32.925  &lt;.0001
+##  Chinstrap - Gentoo   -21.41 1.014 330 -21.109  &lt;.0001
+## 
+## P value adjustment: tukey method for comparing a family of 3 estimates</code></pre>
+<p>The resulting table lists the <em>contrast</em> (which two groups are
+being compared and what is the order of subtraction), the
+<em>estimated</em> difference in the average outcome between the two
+groups, and some additional statistics summarizing the results of a type
+of <span class="math inline">\(t\)</span> test. In this case, because
+all of the p-values are so small, we have evidence to conclude that
+flipper lengths significantly differ between each of the three species
+of penguins.</p>
+</div>
+</div>
+<div id="multiple-linear-regression" class="section level3">
+<h3>Multiple linear regression</h3>
+<p>Similar to how we were able to build up to plots with three or four
+variables, a multiple linear regression model allows us to consider the
+relationship between an outcome and <em>multiple</em> predictors at the
+same time. This is better than fitting a different model for every
+predictor of interest. We can add predictors to our linear regression
+model by simply using the plus sign in the linear model formula. Run the
+code below to see how we model flipper length as a function of both
+penguin species and body mass.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>penguin_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(flipper_length_mm <span class="sc">~</span> species <span class="sc">+</span> body_mass_g, <span class="at">data =</span> penguins)</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a><span class="fu">summary</span>(penguin_lm)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = flipper_length_mm ~ species + body_mass_g, data = penguins)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -14.5418  -3.1804   0.0983   3.3295  17.3954 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      1.585e+02  2.435e+00  65.119  &lt; 2e-16 ***
+## speciesChinstrap 5.492e+00  7.938e-01   6.918  2.4e-11 ***
+## speciesGentoo    1.533e+01  1.117e+00  13.727  &lt; 2e-16 ***
+## body_mass_g      8.515e-03  6.457e-04  13.186  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 5.405 on 329 degrees of freedom
+## Multiple R-squared:  0.8526, Adjusted R-squared:  0.8513 
+## F-statistic: 634.4 on 3 and 329 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Notice we now have three variables in the coefficient table: the two
+indicator variables we discussed before <em>and</em> the numerical
+predictor, body mass. We have also explained more of the variation in
+flipper length by including both species and body mass as predictors in
+the model rather than either one alone (<span class="math inline">\(R^2
+= 0.8526\)</span>). Because we have multiple predictors, interpretations
+of slopes now depend on the other variables in the model. For example,
+we would now interpet the coefficient for body mass as: “<em>After
+adjusting for the species of a penguin</em>, a one-gram increase in the
+mass of a penguin is associated with 0.015 mm longer flipper, on
+average.” Similarly, we could interpret the Chinstrap indicator variable
+coefficient as: “After adjusting for the body mass of a penguin, the
+flipper length of Chinstraps species is, on average, 5.5 mm longer than
+the flipper length of Adelie species.”</p>
+</div>
+</div>
+<div id="linear-regression-with-the-federal-criminal-sentencing-data"
+class="section level2">
+<h2>Linear Regression with the Federal Criminal Sentencing Data</h2>
+<p>Now that we’ve explored the basics of linear regression using both
+numerical and categorical variables, let’s return to the goal of this
+project: to explore patterns in federal criminal sentencing data from
+2006-2020. We will show how to create relevant linear models for this
+data, and discuss the results of these models in the following section.
+We won’t dive into the specifics of how we determined which variables to
+include in the linear regression model. Rather, we will simply replicate
+the results of original study, <a
+href="https://www.nature.com/articles/s41599-023-01879-5">Federal
+Criminal Sentencing: Race-Based Disparate Impact and Differential
+Treatment in Judicial Districts</a>.</p>
+<div id="baseline-model" class="section level3">
+<h3>Baseline model</h3>
+<p>Let’s start with a simple model to see how sentence length changes by
+race alone, without considering any other factors.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>baselinemod <span class="ot">&lt;-</span> <span class="fu">lm</span>(sentence_length <span class="sc">~</span> race, <span class="at">data =</span> us_sent)</span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">summary</span>(baselinemod)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = sentence_length ~ race, data = us_sent)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -74.34 -48.34 -20.49  22.66 423.15 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   74.3435     0.1668  445.78   &lt;2e-16 ***
+## raceHispanic -13.2529     0.2774  -47.77   &lt;2e-16 ***
+## raceARI      -27.4939     0.4607  -59.67   &lt;2e-16 ***
+## raceWhite    -18.5143     0.2300  -80.48   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 71.47 on 518715 degrees of freedom
+## Multiple R-squared:  0.01549,    Adjusted R-squared:  0.01549 
+## F-statistic:  2721 on 3 and 518715 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Already, we can use some of the methods we used above to summarize
+the model. How does sentence length seem to differ by race? Considering
+the <span class="math inline">\(R^2\)</span>, is this a good model for
+our data?</p>
+<p>Recall that the race variable has four categories: Black, Hispanic,
+White, and another race indicated (ARI). Based on the model output,
+“Black” is missing from the indicator variables, which tells us that
+Black defendants are the reference level. Because all of the
+coefficients are negative, we know that Black defendants tended to have
+longer sentences, on average, than defendants of every other race. For
+example, the average sentence length of Black defendants is about 18.5
+months longer than the average sentence of White defendants.</p>
+<p>We can explore these differences further by obtaining 95% confidence
+intervals for the coefficients using <code>confint()</code> (see the
+previous case study on <a
+href="https://htmlpreview.github.io/?https://github.com/qsideinstitute/Data4Justice-Curriculum/blob/main/Data4Justice-Curriculum-v4.html">Diversity
+of Artists in Major U.S. Museums</a> for a discussion of confidence
+intervals):</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="fu">confint</span>(baselinemod)</span></code></pre></div>
+<pre><code>##                  2.5 %    97.5 %
+## (Intercept)   74.01661  74.67034
+## raceHispanic -13.79668 -12.70915
+## raceARI      -28.39691 -26.59086
+## raceWhite    -18.96520 -18.06347</code></pre>
+<p>This allows us to estimate the coefficients with some degree of
+error. Using the same example as before and the bottom row of the table
+of confidence intervals, we would say we are 95% confident that the
+average sentence length of Black defendants is between 18.1 and 19
+months longer than the average sentence of White defendants.</p>
+<p>Returning to the model summary output, you may have noticed that the
+Multiple <span class="math inline">\(R^2\)</span> is relatively low,
+indicating that our model using only race as a predictor accounts for
+only 1.5% of the variation in sentence length. Do you think we can make
+a better model using more variables to predict sentence length? Of
+course! Let’s jump into replicating one of the models in the original
+study.</p>
+</div>
+<div id="replicating-model-11-district-model-ii" class="section level3">
+<h3>Replicating Model 11, District Model II</h3>
+<p>Alright, let’s try to improve our model by adding more predictors. In
+particular, we hope to replicate—in part—Model 11 from <a
+href="https://www.nature.com/articles/s41599-023-01879-5/tables/2">Table
+2</a> of the original study, fit separately within each district as
+shown in <a
+href="https://www.nature.com/articles/s41599-023-01879-5/figures/2">Figure
+2</a> (District Model 2).</p>
+<p>Model 11 includes 9 predictors: race, age, sex, and education level
+(<code>educ</code>) of the defendant, year of the sentencing, whether or
+not the defendant entered a guilty plea (<code>guilty_plea</code>),
+where the case falls in the <em>U.S. sentencing grid</em>
+(<code>grid_cell</code>: found by by crossing each level of the criminal
+history variable with each possible adjusted offense level rating),
+whether there was a mandatory minimum sentence
+(<code>mandatory_min</code>), and finally the presence of
+government-sponsored downward departures (<code>gov_departures</code>).
+This model assumes that all districts, on average, apply the U.S.
+sentencing grid in the same way.</p>
+<p>We’ll start by looking at the results just for Arizona. The code for
+formulating this linear regression model would follow the same format as
+the other linear models we’ve fit, but we can add an argument to
+<code>subset</code> the data to only consider the Arizona district:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>model11_az <span class="ot">&lt;-</span> <span class="fu">lm</span>(sentence_length <span class="sc">~</span> race <span class="sc">+</span> age <span class="sc">+</span> sex <span class="sc">+</span> educ <span class="sc">+</span> year <span class="sc">+</span> </span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>                   mandatory_min <span class="sc">+</span> guilty_plea <span class="sc">+</span> grid_cell <span class="sc">+</span> gov_departures,</span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>                 <span class="at">data =</span> us_sent,</span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>                 <span class="at">subset =</span> (district <span class="sc">==</span> <span class="st">&quot;Arizona&quot;</span>))</span></code></pre></div>
+<p>You can take a look at the full model summary output on your own—we
+are omitting the summary from this document because, as you can imagine,
+it becomes quite long with so many categorical variables in the model.
+However, the code below allows us to pull out the <span
+class="math inline">\(R^2\)</span> value and view only the first 9 rows
+of the table of coefficients, which includes only the demographic
+predictors:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="co"># Grab R-squared</span></span>
+<span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a><span class="fu">summary</span>(model11_az)<span class="sc">$</span>r.squared</span></code></pre></div>
+<pre><code>## [1] 0.7245824</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="co"># View partial model results </span></span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="fu">tidy</span>(model11_az, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">booktabs =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+<th style="text-align:right;">
+conf.low
+</th>
+<th style="text-align:right;">
+conf.high
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+9.818
+</td>
+<td style="text-align:right;">
+2.403
+</td>
+<td style="text-align:right;">
+4.086
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+5.108
+</td>
+<td style="text-align:right;">
+14.528
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raceHispanic
+</td>
+<td style="text-align:right;">
+-0.788
+</td>
+<td style="text-align:right;">
+1.116
+</td>
+<td style="text-align:right;">
+-0.706
+</td>
+<td style="text-align:right;">
+0.480
+</td>
+<td style="text-align:right;">
+-2.976
+</td>
+<td style="text-align:right;">
+1.399
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raceARI
+</td>
+<td style="text-align:right;">
+12.660
+</td>
+<td style="text-align:right;">
+1.163
+</td>
+<td style="text-align:right;">
+10.882
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+10.380
+</td>
+<td style="text-align:right;">
+14.941
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+raceWhite
+</td>
+<td style="text-align:right;">
+-1.495
+</td>
+<td style="text-align:right;">
+1.156
+</td>
+<td style="text-align:right;">
+-1.293
+</td>
+<td style="text-align:right;">
+0.196
+</td>
+<td style="text-align:right;">
+-3.761
+</td>
+<td style="text-align:right;">
+0.771
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:right;">
+0.020
+</td>
+<td style="text-align:right;">
+0.024
+</td>
+<td style="text-align:right;">
+0.828
+</td>
+<td style="text-align:right;">
+0.407
+</td>
+<td style="text-align:right;">
+-0.027
+</td>
+<td style="text-align:right;">
+0.067
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sexFemale
+</td>
+<td style="text-align:right;">
+-6.569
+</td>
+<td style="text-align:right;">
+0.619
+</td>
+<td style="text-align:right;">
+-10.612
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+-7.782
+</td>
+<td style="text-align:right;">
+-5.356
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+educHS Grad
+</td>
+<td style="text-align:right;">
+-0.731
+</td>
+<td style="text-align:right;">
+0.602
+</td>
+<td style="text-align:right;">
+-1.214
+</td>
+<td style="text-align:right;">
+0.225
+</td>
+<td style="text-align:right;">
+-1.910
+</td>
+<td style="text-align:right;">
+0.449
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+educSome College
+</td>
+<td style="text-align:right;">
+-3.455
+</td>
+<td style="text-align:right;">
+0.748
+</td>
+<td style="text-align:right;">
+-4.620
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+-4.921
+</td>
+<td style="text-align:right;">
+-1.989
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+educCollege Grad
+</td>
+<td style="text-align:right;">
+-8.061
+</td>
+<td style="text-align:right;">
+1.436
+</td>
+<td style="text-align:right;">
+-5.613
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+-10.876
+</td>
+<td style="text-align:right;">
+-5.246
+</td>
+</tr>
+</tbody>
+</table>
+<p>First, we notice that Model 11 results in a much higher <span
+class="math inline">\(R^2\)</span> than our baseline model! Of course it
+makes sense that including more variables explains more of the
+variability in sentencing length, but we did quite well with an <span
+class="math inline">\(R^2\)</span> of 0.725!</p>
+<p>Next, because we are primarily interested in race-based disparities
+after adjusting for all of the other predictors in the model, we dig
+deeper into how sentencing lengths differ by race. The pairwise
+comparisons are provided below, after averaging over every other
+predictor variable in Model 11 (listed as nuisance factors below to ease
+computation).</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">emmeans</span>(model11_az, pairwise <span class="sc">~</span> race,</span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>        <span class="at">nuisance =</span> <span class="fu">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;educ&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;mandatory_min&quot;</span>, </span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>                     <span class="st">&quot;guilty_plea&quot;</span>, <span class="st">&quot;grid_cell&quot;</span>, <span class="st">&quot;gov_departures&quot;</span>))<span class="sc">$</span>contrasts</span></code></pre></div>
+<pre><code>##  contrast         estimate    SE    df t.ratio p.value
+##  Black - Hispanic    0.788 1.116 12421   0.706  0.8947
+##  Black - ARI       -12.660 1.163 12421 -10.882  &lt;.0001
+##  Black - White       1.495 1.156 12421   1.293  0.5674
+##  Hispanic - ARI    -13.448 0.676 12421 -19.880  &lt;.0001
+##  Hispanic - White    0.707 0.709 12421   0.996  0.7515
+##  ARI - White        14.155 0.777 12421  18.213  &lt;.0001
+## 
+## Results are averaged over the levels of: 7 nuisance factors 
+## P value adjustment: tukey method for comparing a family of 4 estimates</code></pre>
+<p>Notice that the only comparisons with very small p-values all involve
+ARI, with the biggest difference in average sentencing length
+(approximately 14 months) occurring between White and ARI defendants.
+This difference is highlighted by the orange square in the first column
+of <a
+href="https://www.nature.com/articles/s41599-023-01879-5/figures/2">Figure
+2</a>, linked here and shown below.</p>
+<p><img src="fig/fedsent_fig2.jpg" /></p>
+<p>Let’s repeat this process for the “Virginia East” district to see if
+we can replicate the second column in Figure 2:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="co"># Fit Model 11 in Virginia East</span></span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>model11_vae <span class="ot">&lt;-</span> <span class="fu">lm</span>(sentence_length <span class="sc">~</span> race <span class="sc">+</span> age <span class="sc">+</span> sex <span class="sc">+</span> educ <span class="sc">+</span> year <span class="sc">+</span> </span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a>                   mandatory_min <span class="sc">+</span> guilty_plea <span class="sc">+</span> grid_cell <span class="sc">+</span> gov_departures,</span>
+<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>                 <span class="at">data =</span> us_sent,</span>
+<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a>                 <span class="at">subset =</span> (district <span class="sc">==</span> <span class="st">&quot;Virginia East&quot;</span>))</span>
+<span id="cb36-6"><a href="#cb36-6" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" tabindex="-1"></a><span class="co"># Grab R-squared</span></span>
+<span id="cb36-8"><a href="#cb36-8" tabindex="-1"></a><span class="fu">summary</span>(model11_vae)<span class="sc">$</span>r.squared</span></code></pre></div>
+<pre><code>## [1] 0.8324298</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="co"># Look at comparisons across race</span></span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a><span class="fu">emmeans</span>(model11_vae, pairwise <span class="sc">~</span> race,</span>
+<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a>        <span class="at">nuisance =</span> <span class="fu">c</span>(<span class="st">&quot;sex&quot;</span>, <span class="st">&quot;educ&quot;</span>, <span class="st">&quot;year&quot;</span>, <span class="st">&quot;mandatory_min&quot;</span>, </span>
+<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a>                     <span class="st">&quot;guilty_plea&quot;</span>, <span class="st">&quot;grid_cell&quot;</span>, <span class="st">&quot;gov_departures&quot;</span>))<span class="sc">$</span>contrasts</span></code></pre></div>
+<pre><code>##  contrast         estimate    SE    df t.ratio p.value
+##  Black - Hispanic    8.072 1.663 10132   4.855  &lt;.0001
+##  Black - ARI         7.810 2.023 10132   3.861  0.0007
+##  Black - White       7.475 0.931 10132   8.032  &lt;.0001
+##  Hispanic - ARI     -0.263 2.480 10132  -0.106  0.9996
+##  Hispanic - White   -0.597 1.726 10132  -0.346  0.9857
+##  ARI - White        -0.335 2.019 10132  -0.166  0.9984
+## 
+## Results are averaged over the levels of: 7 nuisance factors 
+## P value adjustment: tukey method for comparing a family of 4 estimates</code></pre>
+<p>What do you notice with these results? Which racial groups have the
+biggest estimated difference in average sentence length? Which
+comparison is highlighted in Figure2?</p>
+<p>We could repeat this process across each district to fill in the
+remainder of the District Model II comparisons highlighted in orange in
+Figure 2. Try a few more districts on your own to see if you can
+replicate more points in the figure!</p>
+<!-- Add previous/next buttons to bottom of page -->
+<ul class="pager">
+<!--this is the style of the button-->
+<li>
+<a href="sentencing-eda.html">Back to Exploratory Data Analysis</a>
+</li>
+<!--This button takes me to the table of contents-->
+<li>
+<a href="results.html">Next: Additional Results</a>
+</li>
+<!--This button takes me to the previous page-->
+</ul>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

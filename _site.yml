@@ -1,4 +1,5 @@
 name: "federal-criminal-sentencing"
+output_dir: "docs"
 output: 
   html_document:
     theme: united
